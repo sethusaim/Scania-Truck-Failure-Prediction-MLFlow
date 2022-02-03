@@ -29,7 +29,7 @@
       "memoryReservation": 128,
       "volumesFrom": [],
       "stopTimeout": null,
-      "image": "347460842118.dkr.ecr.us-east-2.amazonaws.com/aws-scania-mlflow",
+      "image": "347460842118.dkr.ecr.us-east-1.amazonaws.com/scania",
       "startTimeout": null,
       "firelensConfiguration": null,
       "dependsOn": null,
@@ -46,7 +46,7 @@
       "dockerLabels": null,
       "systemControls": null,
       "privileged": null,
-      "name": "aws-scania-mlflow"
+      "name": "scania"
     }
   ],
   "placementConstraints": [],
@@ -56,8 +56,8 @@
     "EXTERNAL",
     "EC2"
   ],
-  "taskDefinitionArn": "arn:aws:ecs:us-east-2:347460842118:task-definition/aws-task-def:1",
-  "family": "aws-task-def",
+  "taskDefinitionArn": "arn:aws:ecs:us-east-2:347460842118:task-definition/aws-task-definition:1",
+  "family": "aws-task-definition",
   "requiresAttributes": [
     {
       "targetId": null,
