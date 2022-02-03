@@ -56,8 +56,8 @@
     "EXTERNAL",
     "EC2"
   ],
-  "taskDefinitionArn": "arn:aws:ecs:us-east-2:347460842118:task-definition/aws-task-definition:1",
-  "family": "aws-task-definition",
+  "taskDefinitionArn": "arn:aws:ecs:us-east-2:347460842118:task-definition/aws-scania-task-def:1",
+  "family": "aws-scania-task-def",
   "requiresAttributes": [
     {
       "targetId": null,

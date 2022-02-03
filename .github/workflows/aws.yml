@@ -56,5 +56,5 @@ jobs:
       with:
         task-definition: ${{ steps.task-def.outputs.task-definition }}
         service: scania-service-1
-        cluster: scania-cluster
+        cluster: scania-cluster-1
         wait-for-service-stability: true
