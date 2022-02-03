@@ -55,6 +55,6 @@ jobs:
       uses: aws-actions/amazon-ecs-deploy-task-definition@v1
       with:
         task-definition: ${{ steps.task-def.outputs.task-definition }}
-        service: scania-service
+        service: scania-service-1
         cluster: scania-cluster
         wait-for-service-stability: true
