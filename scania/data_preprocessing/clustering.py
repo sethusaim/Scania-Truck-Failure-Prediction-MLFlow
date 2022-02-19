@@ -34,7 +34,7 @@ class KMeansClustering:
             "direction"
         ]
 
-        self.s3_obj = S3_Operations()
+        self.s3 = S3_Operations()
 
         self.elbow_plot_file = self.config["elbow_plot_fig"]
 
@@ -87,7 +87,7 @@ class KMeansClustering:
                 log_message="Saved elbow_plot fig and local copy is created",
             )
 
-            self.s3_obj.upload_to_s3(
+            self.s3.upload_file(
                 src_file=self.elbow_plot_file,
                 bucket=self.input_files_bucket,
                 dest_file=self.elbow_plot_file,
@@ -116,7 +116,7 @@ class KMeansClustering:
             return self.kn.knee
 
         except Exception as e:
-            self.log_writer.raise_exception_log(
+            self.log_writer.exception_log(
                 error=e,
                 class_name=self.class_name,
                 method_name=method_name,
@@ -152,7 +152,7 @@ class KMeansClustering:
 
             self.y_kmeans = self.kmeans.fit_predict(data)
 
-            self.s3_obj.save_model_to_s3(
+            self.s3.save_model(
                 idx=None,
                 model=self.kmeans,
                 model_bucket=self.model_bucket,
@@ -176,7 +176,7 @@ class KMeansClustering:
             return self.data, self.kmeans
 
         except Exception as e:
-            self.log_writer.raise_exception_log(
+            self.log_writer.exception_log(
                 error=e,
                 class_name=self.class_name,
                 method_name=method_name,

@@ -58,7 +58,7 @@ class MongoDB_Operation:
             return self.client
 
         except Exception as e:
-            self.log_writer.raise_exception_log(
+            self.log_writer.exception_log(
                 error=e,
                 class_name=self.class_name,
                 method_name=method_name,
@@ -99,7 +99,7 @@ class MongoDB_Operation:
             return db
 
         except Exception as e:
-            self.log_writer.raise_exception_log(
+            self.log_writer.exception_log(
                 error=e,
                 class_name=self.class_name,
                 method_name=method_name,
@@ -140,7 +140,7 @@ class MongoDB_Operation:
             return collection
 
         except Exception as e:
-            self.log_writer.raise_exception_log(
+            self.log_writer.exception_log(
                 error=e,
                 class_name=self.class_name,
                 method_name=method_name,
@@ -183,22 +183,22 @@ class MongoDB_Operation:
             return collection
 
         except Exception as e:
-            self.log_writer.raise_exception_log(
+            self.log_writer.exception_log(
                 error=e,
                 class_name=self.class_name,
                 method_name=method_name,
                 table_name=table_name,
             )
 
-    def convert_collection_to_dataframe(self, db_name, collection_name, table_name):
+    def get_collection_as_dataframe(self, db_name, collection_name, table_name):
         """
-        Method Name :   convert_collection_to_dataframe
+        Method Name :   get_collection_as_dataframe
         Description :   This method is used for converting the selected collection to dataframe
 
         Version     :   1.2
         Revisions   :   moved setup to cloud
         """
-        method_name = self.convert_collection_to_dataframe.__name__
+        method_name = self.get_collection_as_dataframe.__name__
 
         self.log_writer.start_log(
             key="start",
@@ -233,7 +233,7 @@ class MongoDB_Operation:
             return df
 
         except Exception as e:
-            self.log_writer.raise_exception_log(
+            self.log_writer.exception_log(
                 error=e,
                 class_name=self.class_name,
                 method_name=method_name,
@@ -291,7 +291,7 @@ class MongoDB_Operation:
             )
 
         except Exception as e:
-            self.log_writer.raise_exception_log(
+            self.log_writer.exception_log(
                 error=e,
                 class_name=self.class_name,
                 method_name=method_name,

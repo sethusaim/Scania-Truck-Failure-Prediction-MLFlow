@@ -51,7 +51,7 @@ class Train_Model:
 
         self.model_finder_obj = Model_Finder(table_name=self.model_train_log)
 
-        self.s3_obj = S3_Operations()
+        self.s3 = S3_Operations()
 
     def training_model(self):
         """
@@ -145,14 +145,14 @@ class Train_Model:
                     train_x=x_train, train_y=y_train, test_x=x_test, test_y=y_test
                 )
 
-                self.s3_obj.save_model_to_s3(
+                self.s3.save_model(
                     idx=i,
                     model=ada_model,
                     model_bucket=self.model_bucket,
                     table_name=self.model_train_log,
                 )
 
-                self.s3_obj.save_model_to_s3(
+                self.s3.save_model(
                     idx=i,
                     model=rf_model,
                     model_bucket=self.model_bucket,
@@ -195,7 +195,7 @@ class Train_Model:
                         log_message="Mlflow logging of params,metrics and models failed",
                     )
 
-                    self.log_writer.raise_exception_log(
+                    self.log_writer.exception_log(
                         error=e,
                         class_name=self.class_name,
                         method_name=method_name,
@@ -222,7 +222,7 @@ class Train_Model:
                 log_message="Unsuccessful End of Training",
             )
 
-            self.log_writer.raise_exception_log(
+            self.log_writer.exception_log(
                 error=e,
                 class_name=self.class_name,
                 method_name=method_name,

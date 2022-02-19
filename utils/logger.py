@@ -69,9 +69,9 @@ class App_Logger:
 
             raise Exception(error_msg)
 
-    def raise_exception_log(self, error, class_name, method_name, table_name):
+    def exception_log(self, error, class_name, method_name, table_name):
         """
-        Method Name :   raise_exception_log
+        Method Name :   exception_log
         Description :   This method is used for logging exception
 
         Version     :   1.2

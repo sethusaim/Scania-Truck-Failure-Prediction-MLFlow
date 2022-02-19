@@ -1,5 +1,4 @@
 from scania.mlflow_utils.mlflow_operations import MLFlow_Operations
-from scania.s3_bucket_operations.s3_operations import S3_Operations
 from utils.logger import App_Logger
 from utils.read_params import read_params
 
@@ -26,8 +25,6 @@ class Load_Prod_Model:
         self.load_prod_model_log = self.config["train_db_log"]["load_prod_model"]
 
         self.exp_name = self.config["mlflow_config"]["experiment_name"]
-
-        self.s3_obj = S3_Operations()
 
         self.mlflow_op = MLFlow_Operations(table_name=self.load_prod_model_log)
 
@@ -197,7 +194,7 @@ run_number  metrics.XGBoost0-best_score metrics.RandomForest1-best_score metrics
             )
 
         except Exception as e:
-            self.log_writer.raise_exception_log(
+            self.log_writer.exception_log(
                 error=e,
                 class_name=self.class_name,
                 method_name=method_name,

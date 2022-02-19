@@ -29,7 +29,7 @@ class Prediction:
 
         self.log_writer = App_Logger()
 
-        self.s3_obj = S3_Operations()
+        self.s3 = S3_Operations()
 
         self.data_getter_pred = Data_Getter_Pred(table_name=self.pred_log)
 
@@ -55,7 +55,7 @@ class Prediction:
         )
 
         try:
-            self.s3_obj.delete_pred_file(table_name=self.pred_log)
+            self.s3.delete_pred_file(table_name=self.pred_log)
 
             data = self.data_getter_pred.get_data()
 
@@ -78,7 +78,7 @@ class Prediction:
 
             kmeans_model_name = self.prod_model_dir + "/" + "KMeans"
 
-            kmeans_model = self.s3_obj.load_model_from_s3(
+            kmeans_model = self.s3.load_model(
                 bucket=self.model_bucket,
                 model_name=kmeans_model_name,
                 table_name=self.pred_log,
@@ -95,7 +95,7 @@ class Prediction:
 
                 cluster_data = cluster_data.drop(["clusters"], axis=1)
 
-                model_name = self.s3_obj.find_correct_model_file(
+                model_name = self.s3.find_correct_model_file(
                     cluster_number=i,
                     bucket_name=self.model_bucket,
                     table_name=self.pred_log,
@@ -103,7 +103,7 @@ class Prediction:
 
                 prod_model_name = self.prod_model_dir + "/" + model_name
 
-                model = self.s3_obj.load_model_from_s3(
+                model = self.s3.load_model(
                     bucket=self.model_bucket,
                     model_name=prod_model_name,
                     table_name=self.pred_log,
@@ -115,7 +115,7 @@ class Prediction:
 
                 result["Predictions"] = result["Predictions"].map({0: "neg", 1: "pos"})
 
-                self.s3_obj.upload_df_as_csv_to_s3(
+                self.s3.upload_df_as_csv(
                     data_frame=result,
                     file_name=self.pred_output_file,
                     bucket=self.input_files_bucket,
@@ -141,7 +141,7 @@ class Prediction:
             )
 
         except Exception as e:
-            self.log_writer.raise_exception_log(
+            self.log_writer.exception_log(
                 error=e,
                 class_name=self.class_name,
                 method_name=method_name,

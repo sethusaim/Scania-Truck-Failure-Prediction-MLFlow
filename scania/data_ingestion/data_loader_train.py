@@ -1,6 +1,5 @@
 from scania.s3_bucket_operations.s3_operations import S3_Operations
 from utils.logger import App_Logger
-from utils.main_utils import convert_object_to_dataframe
 from utils.read_params import read_params
 
 
@@ -20,7 +19,7 @@ class Data_Getter_Train:
 
         self.input_files_bucket = self.config["s3_bucket"]["input_files_bucket"]
 
-        self.s3_obj = S3_Operations()
+        self.s3 = S3_Operations()
 
         self.log_writer = App_Logger()
 
@@ -45,13 +44,11 @@ class Data_Getter_Train:
         )
 
         try:
-            csv_obj = self.s3_obj.get_file_objects_from_s3(
+            df = self.s3.read_csv(
                 bucket=self.input_files_bucket,
-                filename=self.training_file,
+                file_name=self.input_files_bucket,
                 table_name=self.table_name,
             )
-
-            df = convert_object_to_dataframe(obj=csv_obj, table_name=self.table_name)
 
             self.log_writer.start_log(
                 key="exit",
@@ -63,7 +60,7 @@ class Data_Getter_Train:
             return df
 
         except Exception as e:
-            self.log_writer.raise_exception_log(
+            self.log_writer.exception_log(
                 error=e,
                 class_name=self.class_name,
                 method_name=method_name,

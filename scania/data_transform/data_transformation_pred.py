@@ -1,6 +1,5 @@
 from scania.s3_bucket_operations.s3_operations import S3_Operations
 from utils.logger import App_Logger
-from utils.main_utils import convert_object_to_dataframe
 from utils.read_params import read_params
 
 
@@ -17,7 +16,7 @@ class Data_Transform_Pred:
 
         self.pred_data_bucket = self.config["s3_bucket"]["scania_pred_data_bucket"]
 
-        self.s3_obj = S3_Operations()
+        self.s3 = S3_Operations()
 
         self.log_writer = App_Logger()
 
@@ -45,45 +44,40 @@ class Data_Transform_Pred:
         )
 
         try:
-            csv_file_objs = self.s3_obj.get_file_objects_from_s3(
+            lst = self.s3.read_csv(
                 bucket=self.pred_data_bucket,
-                filename=self.good_pred_data_dir,
+                file_name=self.good_pred_data_dir,
                 table_name=self.pred_data_transform_log,
+                folder=True,
             )
 
-            for f in csv_file_objs:
-                file = f.key
+            for idx, t_pdf in enumerate(lst):
+                df = t_pdf[idx][1]
 
-                abs_f = file.split("/")[-1]
+                file = t_pdf[idx][2]
 
-                if file.endswith(".csv"):
-                    df = convert_object_to_dataframe(
-                        obj=f, table_name=self.pred_data_transform_log,
-                    )
+                abs_f = t_pdf[idx][3]
 
-                    df["class"] = df["class"].apply(lambda x: "'" + str(x) + "'")
+                df["class"] = df["class"].apply(lambda x: "'" + str(x) + "'")
 
-                    for column in df.columns:
-                        count = df[column][df[column] == "na"].count()
+                for column in df.columns:
+                    count = df[column][df[column] == "na"].count()
 
-                        if count != 0:
-                            df[column] = df[column].replace("na", "'na'")
+                    if count != 0:
+                        df[column] = df[column].replace("na", "'na'")
 
-                    self.log_writer.log(
-                        table_name=self.pred_data_transform_log,
-                        log_message=f"Quotes added for the file {file}",
-                    )
+                self.log_writer.log(
+                    table_name=self.pred_data_transform_log,
+                    log_message=f"Quotes added for the file {file}",
+                )
 
-                    self.s3_obj.upload_df_as_csv_to_s3(
-                        data_frame=df,
-                        file_name=abs_f,
-                        bucket=self.pred_data_bucket,
-                        dest_file_name=file,
-                        table_name=self.pred_data_transform_log,
-                    )
-
-                else:
-                    pass
+                self.s3.upload_df_as_csv(
+                    data_frame=df,
+                    file_name=abs_f,
+                    bucket=self.pred_data_bucket,
+                    dest_file_name=file,
+                    table_name=self.pred_data_transform_log,
+                )
 
             self.log_writer.start_log(
                 key="exit",
@@ -93,7 +87,7 @@ class Data_Transform_Pred:
             )
 
         except Exception as e:
-            self.log_writer.raise_exception_log(
+            self.log_writer.exception_log(
                 error=e,
                 class_name=self.class_name,
                 method_name=method_name,
