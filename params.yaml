@@ -145,9 +145,12 @@ null_values_csv_file : null_values.csv
 
 pred_output_file : predictions.csv
 
-export_train_csv_file : train_input_file.csv
+regex_file: scania_regex.txt
 
-export_pred_csv_file : pred_input_file.csv
+
+export_csv_file:
+  train: train_input_file.csv
+  pred : pred_input_file.csv
 
 templates:
   dir : templates

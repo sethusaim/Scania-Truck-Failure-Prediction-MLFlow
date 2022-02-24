@@ -32,6 +32,8 @@ class raw_train_data_validation:
 
         self.train_schema_file = self.config["schema_file"]["train_schema_file"]
 
+        self.scania_regex_file = self.config["regex_file"]
+
         self.train_schema_log = self.config["train_db_log"]["values_from_schema"]
 
         self.good_train_data_dir = self.config["data"]["train"]["good_data_dir"]
@@ -133,7 +135,11 @@ class raw_train_data_validation:
                 table_name=self.train_gen_log,
             )
 
-            regex = "['apsfailure']+['\_'']+[\d_]+[\d]+\.csv"
+            regex = self.s3.read_text(
+                file_name=self.scania_regex_file,
+                bucket_name=self.input_files_bucket,
+                table_name=self.train_gen_log,
+            )
 
             self.log_writer.log(
                 table_name=self.train_gen_log, log_message=f"Got {regex} pattern",
