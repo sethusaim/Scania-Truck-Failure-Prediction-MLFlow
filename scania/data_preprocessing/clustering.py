@@ -1,12 +1,12 @@
 from kneed import KneeLocator
 from matplotlib import pyplot as plt
-from scania.s3_bucket_operations.s3_operations import S3_Operations
+from scania.s3_bucket_operations.s3_operations import s3_operations
 from sklearn.cluster import KMeans
-from utils.logger import App_Logger
+from utils.logger import app_logger
 from utils.read_params import read_params
 
 
-class KMeansClustering:
+class kmeans_clustering:
     """
     Description :   This class shall  be used to divide the data into clusters before training.
     Version     :   1.2
@@ -28,17 +28,15 @@ class KMeansClustering:
 
         self.max_clusters = self.config["kmeans_cluster"]["max_clusters"]
 
-        self.kmeans_curve = self.config["kmeans_cluster"]["knee_locator"]["curve"]
+        self.kmeans_curve = self.config["kmeans_cluster"]["knee"]["curve"]
 
-        self.kmeans_direction = self.config["kmeans_cluster"]["knee_locator"][
-            "direction"
-        ]
+        self.kmeans_direction = self.config["kmeans_cluster"]["knee"]["direction"]
 
-        self.s3 = S3_Operations()
+        self.s3 = s3_operations()
 
         self.elbow_plot_file = self.config["elbow_plot_fig"]
 
-        self.log_writer = App_Logger()
+        self.log_writer = app_logger()
 
         self.class_name = self.__class__.__name__
 

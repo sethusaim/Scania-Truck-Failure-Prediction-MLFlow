@@ -1,9 +1,9 @@
-from scania.s3_bucket_operations.s3_operations import S3_Operations
-from utils.logger import App_Logger
+from scania.s3_bucket_operations.s3_operations import s3_operations
+from utils.logger import app_logger
 from utils.read_params import read_params
 
 
-class Data_Transform_Train:
+class data_transform_train:
     """
     Description : This class shall be used for transforming the trainiction batch data before loading it in Database!!.
 
@@ -16,9 +16,9 @@ class Data_Transform_Train:
 
         self.train_data_bucket = self.config["s3_bucket"]["scania_train_data_bucket"]
 
-        self.s3 = S3_Operations()
+        self.s3 = s3_operations()
 
-        self.log_writer = App_Logger()
+        self.log_writer = app_logger()
 
         self.good_train_data_dir = self.config["data"]["train"]["good_data_dir"]
 

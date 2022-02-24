@@ -1,14 +1,14 @@
 import numpy as np
 import pandas as pd
-from scania.s3_bucket_operations.s3_operations import S3_Operations
+from scania.s3_bucket_operations.s3_operations import s3_operations
 from sklearn.decomposition import PCA
 from sklearn.preprocessing import StandardScaler
-from utils.logger import App_Logger
+from utils.logger import app_logger
 from utils.model_utils import get_model_name
 from utils.read_params import read_params
 
 
-class Preprocessor:
+class preprocessor:
     """
     Description :   This class shall  be used to clean and transform the data before training.
     Version     :   1.2
@@ -16,7 +16,7 @@ class Preprocessor:
     """
 
     def __init__(self, table_name):
-        self.log_writer = App_Logger()
+        self.log_writer = app_logger()
 
         self.config = read_params()
 
@@ -30,7 +30,7 @@ class Preprocessor:
 
         self.input_files_bucket = self.config["s3_bucket"]["input_files_bucket"]
 
-        self.s3 = S3_Operations()
+        self.s3 = s3_operations()
 
     def remove_columns(self, data, columns):
         """

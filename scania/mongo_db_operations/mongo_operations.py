@@ -3,11 +3,11 @@ import os
 
 import pandas as pd
 from pymongo import MongoClient
-from utils.logger import App_Logger
+from utils.logger import app_logger
 from utils.read_params import read_params
 
 
-class MongoDB_Operation:
+class mongodb_operations:
     """
     Description :   This method is used for all mongodb operations  
 
@@ -22,7 +22,7 @@ class MongoDB_Operation:
 
         self.DB_URL = os.environ["MONGODB_URL"]
 
-        self.log_writer = App_Logger()
+        self.log_writer = app_logger()
 
     def get_client(self, table_name):
         """

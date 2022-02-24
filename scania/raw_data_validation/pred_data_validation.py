@@ -1,11 +1,11 @@
 import re
 
-from scania.s3_bucket_operations.s3_operations import S3_Operations
-from utils.logger import App_Logger
+from scania.s3_bucket_operations.s3_operations import s3_operations
+from utils.logger import app_logger
 from utils.read_params import read_params
 
 
-class Raw_Pred_Data_Validation:
+class raw_pred_data_validation:
     """
     Description :   This method is used for validating the raw prediction data
 
@@ -18,11 +18,11 @@ class Raw_Pred_Data_Validation:
 
         self.raw_data_bucket_name = raw_data_bucket_name
 
-        self.log_writer = App_Logger()
+        self.log_writer = app_logger()
 
         self.class_name = self.__class__.__name__
 
-        self.s3 = S3_Operations()
+        self.s3 = s3_operations()
 
         self.pred_data_bucket = self.config["s3_bucket"]["scania_pred_data_bucket"]
 

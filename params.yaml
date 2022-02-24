@@ -32,7 +32,7 @@ knn_imputer:
 kmeans_cluster:
   init          : k-means++
   max_clusters  : 11
-  knee_locator:
+  knee:
     curve     : convex
     direction : decreasing
 

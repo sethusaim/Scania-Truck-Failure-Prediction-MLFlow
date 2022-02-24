@@ -1,10 +1,10 @@
-from scania.mongo_db_operations.mongo_operations import MongoDB_Operation
-from scania.s3_bucket_operations.s3_operations import S3_Operations
-from utils.logger import App_Logger
+from scania.mongo_db_operations.mongo_operations import mongodb_operations
+from scania.s3_bucket_operations.s3_operations import s3_operations
+from utils.logger import app_logger
 from utils.read_params import read_params
 
 
-class DB_Operation_Train:
+class db_operation_train:
     """
     Description :    This class shall be used for handling all the db operations
 
@@ -29,11 +29,11 @@ class DB_Operation_Train:
 
         self.train_export_csv_log = self.config["train_db_log"]["export_csv"]
 
-        self.s3 = S3_Operations()
+        self.s3 = s3_operations()
 
-        self.db_op = MongoDB_Operation()
+        self.db_op = mongodb_operations()
 
-        self.log_writer = App_Logger()
+        self.log_writer = app_logger()
 
     def insert_good_data_as_record(self, good_data_db_name, good_data_collection_name):
         """

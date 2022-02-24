@@ -1,12 +1,12 @@
 import pandas as pd
-from scania.data_ingestion.data_loader_prediction import Data_Getter_Pred
-from scania.data_preprocessing.preprocessing import Preprocessor
-from scania.s3_bucket_operations.s3_operations import S3_Operations
-from utils.logger import App_Logger
+from scania.data_ingestion.data_loader_prediction import data_getter_pred
+from scania.data_preprocessing.preprocessing import preprocessor
+from scania.s3_bucket_operations.s3_operations import s3_operations
+from utils.logger import app_logger
 from utils.read_params import read_params
 
 
-class Prediction:
+class prediction:
     """
     Description :   This class shall be used for loading the production model
 
@@ -27,13 +27,13 @@ class Prediction:
 
         self.pred_output_file = self.config["pred_output_file"]
 
-        self.log_writer = App_Logger()
+        self.log_writer = app_logger()
 
-        self.s3 = S3_Operations()
+        self.s3 = s3_operations()
 
-        self.data_getter_pred = Data_Getter_Pred(table_name=self.pred_log)
+        self.data_getter_pred = data_getter_pred(table_name=self.pred_log)
 
-        self.preprocessor = Preprocessor(table_name=self.pred_log)
+        self.preprocessor = preprocessor(table_name=self.pred_log)
 
         self.class_name = self.__class__.__name__
 
@@ -124,7 +124,7 @@ class Prediction:
                 )
 
             self.log_writer.log(
-                table_name=self.pred_log, log_message="End of Prediction"
+                table_name=self.pred_log, log_message="End of prediction"
             )
 
             self.log_writer.start_log(

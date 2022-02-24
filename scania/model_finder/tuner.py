@@ -1,10 +1,10 @@
 from sklearn.ensemble import AdaBoostClassifier, RandomForestClassifier
-from utils.logger import App_Logger
+from utils.logger import app_logger
 from utils.model_utils import get_model_name, get_model_params, get_model_score
 from utils.read_params import read_params
 
 
-class Model_Finder:
+class model_finder:
     """
     Description :   This method is used for hyperparameter tuning of selected models
                     some preprocessing steps and then train the models and register them in mlflow
@@ -19,7 +19,7 @@ class Model_Finder:
 
         self.config = read_params()
 
-        self.log_writer = App_Logger()
+        self.log_writer = app_logger()
 
         self.cv = self.config["model_utils"]["cv"]
 

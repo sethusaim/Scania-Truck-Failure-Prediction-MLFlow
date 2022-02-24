@@ -2,7 +2,7 @@ from datetime import datetime
 import boto3
 
 
-class App_Logger:
+class app_logger:
     """
     Description :   This class is used for logging the info to MongoDB
 

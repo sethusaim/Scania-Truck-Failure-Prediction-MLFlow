@@ -6,11 +6,11 @@ from io import StringIO
 import boto3
 import botocore
 import pandas as pd
-from utils.logger import App_Logger
+from utils.logger import app_logger
 from utils.read_params import read_params
 
 
-class S3_Operations:
+class s3_operations:
     """
     Description :   This method is used for all the S3 bucket operations
 
@@ -23,7 +23,7 @@ class S3_Operations:
 
         self.s3_resource = boto3.resource("s3")
 
-        self.log_writer = App_Logger()
+        self.log_writer = app_logger()
 
         self.config = read_params()
 

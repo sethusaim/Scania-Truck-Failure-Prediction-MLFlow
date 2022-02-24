@@ -1,9 +1,9 @@
-from scania.mlflow_utils.mlflow_operations import MLFlow_Operations
-from utils.logger import App_Logger
+from scania.mlflow_utils.mlflow_operations import mlflow_operations
+from utils.logger import app_logger
 from utils.read_params import read_params
 
 
-class Load_Prod_Model:
+class load_prod_model:
     """
     Description :   This class shall be used for loading the production model
     Written by  :   iNeuron Intelligence
@@ -12,7 +12,7 @@ class Load_Prod_Model:
     """
 
     def __init__(self, num_clusters):
-        self.log_writer = App_Logger()
+        self.log_writer = app_logger()
 
         self.config = read_params()
 
@@ -26,7 +26,7 @@ class Load_Prod_Model:
 
         self.exp_name = self.config["mlflow_config"]["experiment_name"]
 
-        self.mlflow_op = MLFlow_Operations(table_name=self.load_prod_model_log)
+        self.mlflow_op = mlflow_operations(table_name=self.load_prod_model_log)
 
     def load_production_model(self):
         """

@@ -1,11 +1,11 @@
-from scania.data_transform.data_transformation_train import Data_Transform_Train
-from scania.data_type_valid.data_type_valid_train import DB_Operation_Train
-from scania.raw_data_validation.train_data_validation import Raw_train_Data_Validation
-from utils.logger import App_Logger
+from scania.data_transform.data_transformation_train import data_transform_train
+from scania.data_type_valid.data_type_valid_train import db_operation_train
+from scania.raw_data_validation.train_data_validation import raw_train_data_validation
+from utils.logger import app_logger
 from utils.read_params import read_params
 
 
-class Train_Validation:
+class train_validation:
     """
     Description :   This class is used for validating all the trainiction batch files
 
@@ -14,11 +14,11 @@ class Train_Validation:
     """
 
     def __init__(self, bucket_name):
-        self.raw_data = Raw_train_Data_Validation(raw_data_bucket_name=bucket_name)
+        self.raw_data = raw_train_data_validation(raw_data_bucket_name=bucket_name)
 
-        self.data_transform = Data_Transform_Train()
+        self.data_transform = data_transform_train()
 
-        self.db_operation = DB_Operation_Train()
+        self.db_operation = db_operation_train()
 
         self.config = read_params()
 
@@ -32,7 +32,7 @@ class Train_Validation:
             "scania_train_data_collection"
         ]
 
-        self.log_writer = App_Logger()
+        self.log_writer = app_logger()
 
     def training_validation(self):
         """
