@@ -11,7 +11,7 @@ from utils.read_params import read_params
 class MLFlow_Operation:
     """
     Description :    This class shall be used for handling all the mlflow operations
-    Written by  :   iNeuron Intelligence
+    
     
     Version     :   1.2
     Revisions   :   Moved to setup to cloud 
@@ -49,7 +49,7 @@ class MLFlow_Operation:
         On Failure  :   Write an exception log and then raise an exception
 
         Version     :   1.2
-        Written by  :   iNeuron Intelligence
+        
         Revisions   :   moved setup to cloud
         """
         method_name = self.get_experiment_from_mlflow.__name__
@@ -95,7 +95,7 @@ class MLFlow_Operation:
         On Failure  :   Write an exception log and then raise an exception
 
         Version     :   1.2
-        Written by  :   iNeuron Intelligence
+        
         Revisions   :   moved setup to cloud
         """
         method_name = self.get_runs_from_mlflow.__name__
@@ -141,7 +141,7 @@ class MLFlow_Operation:
         On Failure  :   Write an exception log and then raise an exception
 
         Version     :   1.2
-        Written by  :   iNeuron Intelligence
+        
         Revisions   :   moved setup to cloud
         """
         method_name = self.set_mlflow_experiment.__name__
@@ -185,7 +185,7 @@ class MLFlow_Operation:
         On Failure  :   Write an exception log and then raise an exception
 
         Version     :   1.2
-        Written by  :   iNeuron Intelligence
+        
         Revisions   :   moved setup to cloud
         """
         method_name = self.get_mlflow_client.__name__
@@ -231,7 +231,7 @@ class MLFlow_Operation:
         On Failure  :   Write an exception log and then raise an exception
 
         Version     :   1.2
-        Written by  :   iNeuron Intelligence
+        
         Revisions   :   moved setup to cloud
         """
         method_name = self.get_remote_server_uri.__name__
@@ -276,7 +276,7 @@ class MLFlow_Operation:
         On Failure  :   Write an exception log and then raise an exception
 
         Version     :   1.2
-        Written by  :   iNeuron Intelligence
+        
         Revisions   :   moved setup to cloud
         """
         method_name = self.set_mlflow_tracking_uri.__name__
@@ -321,7 +321,7 @@ class MLFlow_Operation:
         On Failure  :   Write an exception log and then raise an exception
 
         Version     :   1.2
-        Written by  :   iNeuron Intelligence
+        
         Revisions   :   moved setup to cloud
         """
         method_name = self.get_mlflow_models.__name__
@@ -371,7 +371,7 @@ class MLFlow_Operation:
         On Failure  :   Write an exception log and then raise an exception
 
         Version     :   1.2
-        Written by  :   iNeuron Intelligence
+        
         Revisions   :   moved setup to cloud
         """
         method_name = self.search_mlflow_models.__name__
@@ -421,7 +421,7 @@ class MLFlow_Operation:
         On Failure  :   Write an exception log and then raise an exception
 
         Version     :   1.2
-        Written by  :   iNeuron Intelligence
+        
         Revisions   :   moved setup to cloud
         """
         method_name = self.log_model.__name__
@@ -470,7 +470,7 @@ class MLFlow_Operation:
         On Failure  :   Write an exception log and then raise an exception
 
         Version     :   1.2
-        Written by  :   iNeuron Intelligence
+        
         Revisions   :   moved setup to cloud
         """
         method_name = self.log_metric.__name__
@@ -516,7 +516,7 @@ class MLFlow_Operation:
         On Failure  :   Write an exception log and then raise an exception
 
         Version     :   1.2
-        Written by  :   iNeuron Intelligence
+        
         Revisions   :   moved setup to cloud
         """
         method_name = self.log_param.__name__
@@ -562,7 +562,7 @@ class MLFlow_Operation:
         On Failure  :   Write an exception log and then raise an exception
 
         Version     :   1.2
-        Written by  :   iNeuron Intelligence
+        
         Revisions   :   moved setup to cloud
         """
         method_name = self.log_all_for_model.__name__
@@ -634,7 +634,7 @@ class MLFlow_Operation:
         On Failure  :   Write an exception log and then raise an exception
 
         Version     :   1.2
-        Written by  :   iNeuron Intelligence
+        
         Revisions   :   moved setup to cloud
         """
         method_name = self.transition_mlflow_model.__name__

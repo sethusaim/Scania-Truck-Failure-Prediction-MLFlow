@@ -1,33 +1,33 @@
 import mlflow
-from scania.data_ingestion.data_loader_train import data_getter_train
-from scania.data_preprocessing.clustering import kmeans_clustering
-from scania.data_preprocessing.preprocessing import preprocessor
-from scania.mlflow_utils.mlflow_operations import mlflow_operations
-from scania.model_finder.tuner import model_finder
-from scania.s3_bucket_operations.s3_operations import s3_operations
+from scania.data_ingestion.data_loader_train import Data_Getter_Train
+from scania.data_preprocessing.clustering import KMeans_Clustering
+from scania.data_preprocessing.preprocessing import Preprocessor
+from scania.mlflow_utils.mlflow_operations import MLFlow_Operation
+from scania.model_finder.tuner import Model_Finder
+from scania.s3_bucket_operations.s3_operations import S3_Operation
 from sklearn.model_selection import train_test_split
-from utils.logger import app_logger
-from utils.model_utils import get_model_name
+from utils.logger import App_Logger
 from utils.read_params import read_params
 
 
-class train_model:
+class Train_Model:
     """
     Description :   This method is used for getting the data and applying
                     some preprocessing steps and then train the models and register them in mlflow
-
+    Written by  :   iNeuron Intelligence
+    
     Version     :   1.2
-    Revisions   :   moved to setup to cloud
+    Revisions   :   Moved to setup to cloud 
     """
 
     def __init__(self):
-        self.log_writer = app_logger()
+        self.log_writer = App_Logger()
 
         self.config = read_params()
 
         self.model_train_log = self.config["train_db_log"]["model_training"]
 
-        self.model_bucket = self.config["s3_bucket"]["scania_model_bucket"]
+        self.model_bucket_name = self.config["bucket"]["phising_model"]
 
         self.test_size = self.config["base"]["test_size"]
 
@@ -35,31 +35,39 @@ class train_model:
 
         self.random_state = self.config["base"]["random_state"]
 
+        self.remote_server_uri = self.config["mlflow_config"]["remote_server_uri"]
+
         self.experiment_name = self.config["mlflow_config"]["experiment_name"]
 
         self.run_name = self.config["mlflow_config"]["run_name"]
 
+        self.train_model_dir = self.config["models_dir"]["trained"]
+
         self.class_name = self.__class__.__name__
 
-        self.mlflow_op = mlflow_operations(table_name=self.model_train_log)
+        self.mlflow_op = MLFlow_Operation(table_name=self.model_train_log)
 
-        self.data_getter_train_obj = data_getter_train(table_name=self.model_train_log)
+        self.data_getter_train = Data_Getter_Train(table_name=self.model_train_log)
 
-        self.preprocessor_obj = preprocessor(table_name=self.model_train_log)
+        self.preprocessor = Preprocessor(table_name=self.model_train_log)
 
-        self.kmeans_obj = kmeans_clustering(table_name=self.model_train_log)
+        self.kmeans_op = KMeans_Clustering(table_name=self.model_train_log)
 
-        self.model_finder_obj = model_finder(table_name=self.model_train_log)
+        self.model_finder = Model_Finder(table_name=self.model_train_log)
 
-        self.s3 = s3_operations()
+        self.s3 = S3_Operation()
 
     def training_model(self):
         """
         Method Name :   training_model
-        Description :   This method is used for getting the data and applying
-                        some preprocessing steps and then train the models and register them in mlflow
+        Description :   This method is responsible for applying the preprocessing functions and then train models againist 
+                        training data and them register them in mlflow
+
+        Output      :   A pandas series object consisting of runs for the particular experiment id
+        On Failure  :   Write an exception log and then raise an exception
 
         Version     :   1.2
+        Written by  :   iNeuron Intelligence
         Revisions   :   moved setup to cloud
         """
         method_name = self.training_model.__name__
@@ -72,45 +80,28 @@ class train_model:
         )
 
         try:
-            df = self.data_getter_train_obj.get_data()
+            data = self.data_getter_train.get_data()
 
-            df = self.preprocessor_obj.replace_invalid_values(data=df)
+            data = self.preprocessor.replace_invalid_values(data)
 
-            df = self.preprocessor_obj.encode_target_cols(data=df)
-
-            is_null_present = self.preprocessor_obj.is_null_present(data=df)
+            is_null_present = self.preprocessor.is_null_present(X)
 
             if is_null_present:
-                df = self.preprocessor_obj.impute_missing_values(data=df)
+                data = self.preprocessor.impute_missing_values(X)
 
-            X, Y = self.preprocessor_obj.separate_label_feature(
-                data=df, label_column_name=self.target_col
+            X, Y = self.preprocessor.separate_label_feature(
+                data, label_column_name=self.target_col
             )
 
-            cols_to_drop = self.preprocessor_obj.get_columns_with_zero_std_deviation(
-                data=X
-            )
+            number_of_clusters = self.kmeans_op.elbow_plot(X)
 
-            X = self.preprocessor_obj.remove_columns(data=X, columns=cols_to_drop)
-
-            X = self.preprocessor_obj.scale_numerical_columns(data=X)
-
-            X = self.preprocessor_obj.apply_pca_transform(X_scaled_data=X)
-
-            number_of_clusters = self.kmeans_obj.elbow_plot(data=X)
-
-            X, kmeans_model = self.kmeans_obj.create_clusters(
+            X, kmeans_model = self.kmeans_op.create_clusters(
                 data=X, number_of_clusters=number_of_clusters
             )
 
             X["Labels"] = Y
 
             list_of_clusters = X["Cluster"].unique()
-
-            self.log_writer.log(
-                table_name=self.model_train_log,
-                log_message="Got unique list of clusters",
-            )
 
             for i in list_of_clusters:
                 cluster_data = X[X["Cluster"] == i]
@@ -137,25 +128,27 @@ class train_model:
                 )
 
                 (
+                    xgb_model,
+                    xgb_model_score,
                     rf_model,
                     rf_model_score,
-                    ada_model,
-                    ada_model_score,
-                ) = self.model_finder_obj.get_trained_models(
-                    train_x=x_train, train_y=y_train, test_x=x_test, test_y=y_test
+                ) = self.model_finder.get_trained_models(
+                    x_train, y_train, x_test, y_test
                 )
 
                 self.s3.save_model(
+                    model=xgb_model,
                     idx=i,
-                    model=ada_model,
-                    model_bucket=self.model_bucket,
+                    model_dir=self.train_model_dir,
+                    model_bucket_name=self.model_bucket_name,
                     table_name=self.model_train_log,
                 )
 
                 self.s3.save_model(
-                    idx=i,
                     model=rf_model,
-                    model_bucket=self.model_bucket,
+                    idx=i,
+                    model_dir=self.train_model_dir,
+                    model_bucket_name=self.model_bucket_name,
                     table_name=self.model_train_log,
                 )
 
@@ -167,19 +160,18 @@ class train_model:
                     )
 
                     with mlflow.start_run(run_name=self.run_name):
-                        kmeans_model_name = get_model_name(
-                            model=kmeans_model, table_name=self.model_train_log
-                        )
-
-                        self.mlflow_op.log_model(
-                            model=kmeans_model, model_name=kmeans_model_name
+                        self.mlflow_op.log_all_for_model(
+                            idx=None,
+                            model=kmeans_model,
+                            model_param_name=None,
+                            model_score=None,
                         )
 
                         self.mlflow_op.log_all_for_model(
                             idx=i,
-                            model=ada_model,
-                            model_param_name="adaboost_model",
-                            model_score=ada_model_score,
+                            model=xgb_model,
+                            model_param_name="xgb_model",
+                            model_score=xgb_model_score,
                         )
 
                         self.mlflow_op.log_all_for_model(
