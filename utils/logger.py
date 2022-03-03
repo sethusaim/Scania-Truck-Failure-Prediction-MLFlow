@@ -5,7 +5,7 @@ import boto3
 class App_Logger:
     """
     Description :   This class is used for logging the info to DynamoDB
-    Written by  :   iNeuron Intelligence
+    
     
     Version     :   1.2
     Revisions   :   Moved to setup to cloud 

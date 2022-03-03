@@ -194,7 +194,7 @@ class raw_train_data_validation:
 
             self.log_writer.log(
                 table_name=self.train_name_valid_log,
-                log_message="Got trainiction files with exact name",
+                log_message="Got training files with exact name",
             )
 
             for filename in train_batch_files:

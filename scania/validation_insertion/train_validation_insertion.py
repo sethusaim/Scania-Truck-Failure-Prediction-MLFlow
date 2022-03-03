@@ -7,7 +7,7 @@ from utils.read_params import read_params
 
 class train_validation:
     """
-    Description :   This class is used for validating all the trainiction batch files
+    Description :   This class is used for validating all the training batch files
 
     Version     :   1.2
     Revisions   :   moved to setup to cloud
@@ -37,7 +37,7 @@ class train_validation:
     def training_validation(self):
         """
         Method Name :   load_s3_obj
-        Description :   This method is used for validating the trainiction btach files
+        Description :   This method is used for validating the training btach files
 
         Version     :   1.2
         Revisions   :   moved setup to cloud

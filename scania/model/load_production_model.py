@@ -6,7 +6,7 @@ from utils.read_params import read_params
 class load_prod_model:
     """
     Description :   This class shall be used for loading the production model
-    Written by  :   iNeuron Intelligence
+    
     Version     :   1.0
     Revisions   :   None
     """

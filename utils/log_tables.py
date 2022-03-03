@@ -5,7 +5,7 @@ from utils.read_params import read_params
 class Create_Log_Table:
     """
     Description :   This class shall be used for creating the log tables in DynamoDB
-    Written by  :   iNeuron Intelligence
+    
     
     Version     :   1.2
     Revisions   :   Moved to setup to cloud 

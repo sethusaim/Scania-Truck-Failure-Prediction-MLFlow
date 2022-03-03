@@ -14,7 +14,7 @@ from utils.read_params import read_params
 class S3_Operation:
     """
     Description :   This method is used for all the S3 bucket_name operations
-    Written by  :   iNeuron Intelligence
+    
     
     Version     :   1.2
     Revisions   :   Moved to setup to cloud 

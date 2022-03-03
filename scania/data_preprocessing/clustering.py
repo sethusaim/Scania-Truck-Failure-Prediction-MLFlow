@@ -9,7 +9,6 @@ from utils.read_params import read_params
 class KMeans_Clustering:
     """
     Description :   This class shall be used to divide the data into clusters before training.
-    Written by  :   iNeuron Intelligence
     
     Version     :   1.2
     Revisions   :   Moved to setup to cloud 
@@ -53,7 +52,6 @@ class KMeans_Clustering:
         On Failure  :   Write an exception log and then raise an exception
         
         Version     :   1.2
-        Written by  :   iNeuron Intelligence
         Revisions   :   Moved to setup to cloud 
         """
         method_name = self.elbow_plot.__name__
@@ -137,7 +135,6 @@ class KMeans_Clustering:
         On Failure  :   Write an exception log and then raise an exception
         
         Version     :   1.2
-        Written by  :   iNeuron Intelligence
         Revisions   :   Moved to setup to cloud 
         """
         method_name = self.create_clusters.__name__

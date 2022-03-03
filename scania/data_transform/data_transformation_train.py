@@ -1,26 +1,27 @@
-from scania.s3_bucket_operations.s3_operations import s3_operations
-from utils.logger import app_logger
+from scania.s3_bucket_operations.s3_operations import S3_Operation
+from utils.logger import App_Logger
 from utils.read_params import read_params
 
 
-class data_transform_train:
+class Data_Transform_Train:
     """
-    Description : This class shall be used for transforming the trainiction batch data before loading it in Database!!.
-
-    Version     : 1.2
-    Revisions   : moved setup to cloud
+    Description :  This class shall be used for transforming the training batch data before loading it in Database!!.
+    
+    
+    Version     :   1.2
+    Revisions   :   Moved to setup to cloud 
     """
 
     def __init__(self):
         self.config = read_params()
 
-        self.train_data_bucket = self.config["s3_bucket"]["scania_train_data_bucket"]
+        self.train_data_bucket = self.config["s3_bucket"]["scania_train_data"]
 
-        self.s3 = s3_operations()
+        self.s3 = S3_Operation()
 
-        self.log_writer = app_logger()
+        self.log_writer = App_Logger()
 
-        self.good_train_data_dir = self.config["data"]["train"]["good_data_dir"]
+        self.good_train_data_dir = self.config["data"]["train"]["good"]
 
         self.class_name = self.__class__.__name__
 
@@ -30,7 +31,10 @@ class data_transform_train:
         """
         Method Name :   add_quotes_to_string
         Description :   This method addes the quotes to the string data present in columns
-
+        
+        Output      :   A csv file where all the string values have quotes inserted
+        On Failure  :   Write an exception log and then raise an exception
+        
         Version     :   1.2
         Revisions   :   moved setup to cloud
         """

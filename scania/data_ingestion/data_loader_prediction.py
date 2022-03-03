@@ -6,7 +6,6 @@ from utils.read_params import read_params
 class Data_Getter_Pred:
     """
     Description :   This class shall be used for obtaining the df from the input files s3 bucket where the prediction file is present
-    Written by  :   iNeuron Intelligence
     
     Version     :   1.2
     Revisions   :   Moved to setup to cloud 
@@ -36,7 +35,6 @@ class Data_Getter_Pred:
         On Failure  :   Write an exception log and then raise an exception
         
         Version     :   1.2
-        Written by  :   iNeuron Intelligence
         Revisions   :   moved setup to cloud
         """
         method_name = self.get_data.__name__
