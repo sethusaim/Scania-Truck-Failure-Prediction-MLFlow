@@ -15,7 +15,6 @@ class Train_Model:
     Description :   This method is used for getting the data and applying
                     some preprocessing steps and then train the models and register them in mlflow
     
-    
     Version     :   1.2
     Revisions   :   Moved to setup to cloud 
     """

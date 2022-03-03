@@ -7,7 +7,7 @@ from utils.logger import App_Logger
 from utils.read_params import read_params
 
 
-class prediction:
+class Prediction:
     """
     Description :   This class shall be used for loading the production model
 
