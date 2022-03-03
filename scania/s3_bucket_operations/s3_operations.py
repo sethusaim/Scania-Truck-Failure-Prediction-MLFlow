@@ -276,7 +276,7 @@ class S3_Operation:
         Method Name :   get_df_from_object
         Description :   This method gets dataframe from object 
 
-        Output      :   Dataframe is read from the object
+        Output      :   dataframe is read from the object
         On Failure  :   Write an exception log and then raise an exception
 
         Version     :   1.2

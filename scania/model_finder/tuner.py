@@ -189,7 +189,7 @@ class model_finder:
         Method Name :   get_trained_models
         Description :   Find out the Model which has the best score.
         Output      :   The best model name and the model object
-        On Failure  :   Raise Exception
+        On Failure  :   Write an exception log and then raise an exception
         Written By  :   iNeuron Intelligence
         Version     :   1.0
         Revisions   :   None

@@ -1,14 +1,14 @@
 import numpy as np
 import pandas as pd
-from scania.s3_bucket_operations.s3_operations import s3_operations
+from scania.s3_bucket_operations.s3_operations import S3_Operation
 from sklearn.decomposition import PCA
 from sklearn.preprocessing import StandardScaler
-from utils.logger import app_logger
-from utils.model_utils import get_model_name
+from utils.logger import App_Logger
+from utils.model_utils import Model_Utils
 from utils.read_params import read_params
 
 
-class preprocessor:
+class Preprocessor:
     """
     Description :   This class shall  be used to clean and transform the data before training.
     Version     :   1.2
@@ -16,7 +16,7 @@ class preprocessor:
     """
 
     def __init__(self, table_name):
-        self.log_writer = app_logger()
+        self.log_writer = App_Logger()
 
         self.config = read_params()
 
@@ -28,16 +28,20 @@ class preprocessor:
 
         self.n_components = self.config["pca_model"]["n_components"]
 
-        self.input_files_bucket = self.config["s3_bucket"]["input_files_bucket"]
+        self.input_files_bucket = self.config["s3_bucket"]["input_files"]
 
-        self.s3 = s3_operations()
+        self.model_utils = Model_Utils()
+
+        self.s3 = S3_Operation()
 
     def remove_columns(self, data, columns):
         """
         Method Name :   remove_columns
         Description :   This method removes the given columns from a pandas dataframe.
+        
         Output      :   A pandas DataFrame after removing the specified columns.
-        On Failure  :   Raise Exception
+        On Failure  :   Write an exception log and then raise an exception
+        
         Version     :   1.2
         Revisions   :   moved setup to cloud
         """
@@ -83,8 +87,10 @@ class preprocessor:
         """
         Method Name :   separate_label_feature
         Description :   This method separates the features and a Label Coulmns.
-        Output      :   Returns two separate Dataframes, one containing features and the other containing Labels .
-        On Failure  :   Raise Exception
+        
+        Output      :   Returns two separate dataframes, one containing features and the other containing Labels .
+        On Failure  :   Write an exception log and then raise an exception
+        
         Version     :   1.2
         Revisions   :   moved setup to cloud
         """
@@ -127,7 +133,11 @@ class preprocessor:
     def replace_invalid_values(self, data):
         """
         Method Name :   replace_invalid_values
-        Description :   This method replaces invalid values i.e. 'na' with np.nan
+        Description :   This method replaces the invalid values with np.nan
+        
+        Output      :   A dataframe without invalid values is returned
+        On Failure  :   Write an exception log and then raise an exception
+        
         Version     :   1.2
         Revisions   :   moved setup to cloud
         """
@@ -167,10 +177,12 @@ class preprocessor:
     def is_null_present(self, data):
         """
         Method Name :   is_null_present
-        Description :   This method checks whether there are null values present in the pandas Dataframe or not.
+        Description :   This method checks whether there are null values present in the pandas dataframe or not.
+        
         Output      :   Returns True if null values are present in the DataFrame, False if they are not present and
                         returns the list of columns for which null values are present.
-        On Failure  :   Raise Exception
+        On Failure  :   Write an exception log and then raise an exception
+        
         Version     :   1.2
         Revisions   :   moved setup to cloud
         """
@@ -262,8 +274,10 @@ class preprocessor:
         """
         Method Name :   encode_target_cols
         Description :   This method encodes all the categorical values in the training set.
-        Output      :   A Dataframe which has target values encoded.
-        On Failure  :   Raise Exception
+        
+        Output      :   A dataframe which has target values encoded.
+        On Failure  :   Write an exception log and then raise an exception
+        
         Version     :   1.2
         Revisions   :   moved setup to cloud
         """
@@ -304,9 +318,10 @@ class preprocessor:
     def impute_missing_values(self, data):
         """
         Method Name :   impute_missing_values
-        Description :   This method replaces all the missing values in the Dataframe using mean values of the column.
-        Output      :   A Dataframe which has all the missing values imputed.
-        On Failure  :   Raise Exception
+        Description :   This method replaces all the missing values in the dataframe using mean values of the column.
+        
+        Output      :   A dataframe which has all the missing values imputed.
+        On Failure  :   Write an exception log and then raise an exception
 
         Version     :   1.2
         Revisions   :   moved setup to cloud
@@ -349,8 +364,9 @@ class preprocessor:
         """
         Method Name : apply_pca_transform
         Description : This method applies the PCA transformation the features cols
+        
         Output      : A dataframe with scaled values
-        On Failure  : Raise Exception
+        On Failure  : Write an exception log and then raise an exception
 
         Version     : 1.2
         Revisions   : moved setup to cloud
@@ -367,7 +383,7 @@ class preprocessor:
 
             pca = PCA(n_components=self.n_components)
 
-            pca_model_name = get_model_name(model=pca, table_name=self.table_name)
+            pca_model_name = self.model_utils.get_model_name(model=pca, table_name=self.table_name)
 
             self.log_writer.log(
                 table_name=self.table_name,
@@ -409,8 +425,9 @@ class preprocessor:
         """
         Method Name : scale_numerical_columns
         Description : This method scales the numerical values using the Standard scaler.
+        
         Output      : A dataframe with scaled values
-        On Failure  : Raise Exception
+        On Failure  : Write an exception log and then raise an exception
 
         Version     : 1.2
         Revisions   : moved setup to cloud
@@ -471,8 +488,9 @@ class preprocessor:
         """
         Method Name :   get_columns_with_zero_std_deviation
         Description :   This method finds out the columns which have a standard deviation of zero.
+        
         Output      :   List of the columns with standard deviation of zero
-        On Failure  :   Raise Exception
+        On Failure  :   Write an exception log and then raise an exception
 
         Version     :   1.2
         Revisions   :   moved setup to cloud
