@@ -14,7 +14,7 @@ class Train_Model:
     """
     Description :   This method is used for getting the data and applying
                     some preprocessing steps and then train the models and register them in mlflow
-    Written by  :   iNeuron Intelligence
+    
     
     Version     :   1.2
     Revisions   :   Moved to setup to cloud 
@@ -67,7 +67,7 @@ class Train_Model:
         On Failure  :   Write an exception log and then raise an exception
 
         Version     :   1.2
-        Written by  :   iNeuron Intelligence
+        
         Revisions   :   moved setup to cloud
         """
         method_name = self.training_model.__name__

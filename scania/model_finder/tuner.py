@@ -1,10 +1,10 @@
 from sklearn.ensemble import AdaBoostClassifier, RandomForestClassifier
-from utils.logger import app_logger
-from utils.model_utils import get_model_name, get_model_params, get_model_score
+from utils.logger import App_Logger
+from utils.model_utils import Model_Utils
 from utils.read_params import read_params
 
 
-class model_finder:
+class Model_Finder:
     """
     Description :   This method is used for hyperparameter tuning of selected models
                     some preprocessing steps and then train the models and register them in mlflow
@@ -19,13 +19,9 @@ class model_finder:
 
         self.config = read_params()
 
-        self.log_writer = app_logger()
+        self.log_writer = App_Logger()
 
-        self.cv = self.config["model_utils"]["cv"]
-
-        self.verbose = self.config["model_utils"]["verbose"]
-
-        self.n_jobs = self.config["model_utils"]["n_jobs"]
+        self.model_utils = Model_Utils()
 
         self.ada_model = AdaBoostClassifier()
 
@@ -33,8 +29,13 @@ class model_finder:
 
     def get_best_model_for_adaboost(self, train_x, train_y):
         """
-        Method Name :   get_best_params_for_xgb
-        Description :   This method is used for getting the best params for xgboost model
+        Method Name :   get_best_model_for_adaboost
+        Description :   get the parameters for AdaBoost Algorithm which give the best accuracy.
+                        Use Hyper Parameter Tuning.
+        
+        Output      :   The model with the best parameters
+        On Failure  :   Write an exception log and then raise an exception
+        
         Version     :   1.2
         Revisions   :   moved setup to cloud
         """
@@ -48,11 +49,11 @@ class model_finder:
         )
 
         try:
-            self.ada_model_name = get_model_name(
+            self.ada_model_name = self.model_utils.get_model_name(
                 model=self.ada_model, table_name=self.table_name
             )
 
-            self.adaboost_best_params = get_model_params(
+            self.adaboost_best_params = self.model_utils.get_model_params(
                 model=self.ada_model,
                 model_key_name="adaboost_model",
                 x_train=train_x,
@@ -108,9 +109,15 @@ class model_finder:
 
     def get_best_model_for_rf(self, train_x, train_y):
         """
-        Method Name :   get_best_params_for_xgb
-        Description :   This method is used for getting the best params for xgboost model
+        Method Name :   get_best_model_for_rf
+        Description :   get the parameters for Random Forest Algorithm which give the best accuracy.
+                        Use Hyper Parameter Tuning.
+        
+        Output      :   The model with the best parameters
+        On Failure  :   Write an exception log and then raise an exception
+        
         Version     :   1.2
+        
         Revisions   :   moved setup to cloud
         """
         method_name = self.get_best_model_for_rf.__name__
@@ -123,11 +130,11 @@ class model_finder:
         )
 
         try:
-            self.rf_model_name = get_model_name(
+            self.rf_model_name = self.model_utils.get_model_name(
                 model=self.rf_model, table_name=self.table_name
             )
 
-            self.rf_best_params = get_model_params(
+            self.rf_best_params = self.model_utils.get_model_params(
                 model=self.rf_model,
                 model_key_name="rf_model",
                 x_train=train_x,
@@ -188,9 +195,10 @@ class model_finder:
         """
         Method Name :   get_trained_models
         Description :   Find out the Model which has the best score.
+        
         Output      :   The best model name and the model object
         On Failure  :   Write an exception log and then raise an exception
-        Written By  :   iNeuron Intelligence
+        
         Version     :   1.0
         Revisions   :   None
         """
@@ -208,7 +216,7 @@ class model_finder:
                 train_x=train_x, train_y=train_y
             )
 
-            ada_model_score = get_model_score(
+            ada_model_score = self.model_utilsget_model_score(
                 model=ada_model,
                 test_x=test_x,
                 test_y=test_y,
@@ -217,7 +225,7 @@ class model_finder:
 
             rf_model = self.get_best_model_for_rf(train_x=train_x, train_y=train_y)
 
-            rf_model_score = get_model_score(
+            rf_model_score = self.model_utils.get_model_score(
                 model=rf_model,
                 test_x=test_x,
                 test_y=test_y,
