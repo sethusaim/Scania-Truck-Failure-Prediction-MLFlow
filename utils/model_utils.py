@@ -13,6 +13,7 @@ class Model_Utils:
     Version     :   1.2
     Revisions   :   Moved to setup to cloud 
     """
+
     def __init__(self):
         self.log_writer = App_Logger()
 

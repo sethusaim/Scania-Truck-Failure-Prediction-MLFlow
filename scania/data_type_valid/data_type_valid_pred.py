@@ -1,15 +1,16 @@
-from scania.mongo_db_operations.mongo_operations import mongodb_operations
-from scania.s3_bucket_operations.s3_operations import s3_operations
-from utils.logger import app_logger
+from scania.mongo_db_operations.mongo_operations import MongoDB_Operation
+from scania.s3_bucket_operations.s3_operations import S3_Operation
+from utils.logger import App_Logger
 from utils.read_params import read_params
 
 
-class db_operation_pred:
+class DB_Operation_Pred:
     """
     Description :    This class shall be used for handling all the db operations
-
-    Version     :    1.2
-    Revisions   :    moved setup to cloud
+    
+    
+    Version     :   1.2
+    Revisions   :   Moved to setup to cloud 
     """
 
     def __init__(self):
@@ -17,30 +18,34 @@ class db_operation_pred:
 
         self.class_name = self.__class__.__name__
 
-        self.pred_data_bucket = self.config["s3_bucket"]["scania_pred_data_bucket"]
+        self.pred_data_bucket = self.config["bucket"]["scania_pred_data"]
 
-        self.pred_export_csv_file = self.config["export_pred_csv_file"]
+        self.pred_export_csv_file = self.config["export_csv_file"]["pred"]
 
-        self.good_data_pred_dir = self.config["data"]["pred"]["good_data_dir"]
+        self.good_data_pred_dir = self.config["data"]["pred"]["good"]
 
-        self.input_files_bucket = self.config["s3_bucket"]["input_files_bucket"]
+        self.input_files_bucket = self.config["bucket"]["input_files"]
 
         self.pred_db_insert_log = self.config["pred_db_log"]["db_insert"]
 
         self.pred_export_csv_log = self.config["pred_db_log"]["export_csv"]
 
-        self.s3 = s3_operations()
+        self.s3 = S3_Operation()
 
-        self.db_op = mongodb_operations()
+        self.mongo = MongoDB_Operation()
 
-        self.log_writer = app_logger()
+        self.log_writer = App_Logger()
 
     def insert_good_data_as_record(self, good_data_db_name, good_data_collection_name):
         """
         Method Name :   insert_good_data_as_record
         Description :   This method inserts the good data in MongoDB as collection
 
+        Output      :   A MongoDB collection is created with good data present in it
+        On Failure  :   Write an exception log and then raise an exception
+
         Version     :   1.2
+        
         Revisions   :   moved setup to cloud
         """
         method_name = self.insert_good_data_as_record.__name__
@@ -53,20 +58,19 @@ class db_operation_pred:
         )
 
         try:
-            lst = self.s3.read_csv(
-                bucket=self.pred_data_bucket,
-                file_name=self.good_data_pred_dir,
+            lst = self.s3.read_csv_from_folder(
+                folder_name=self.good_data_pred_dir,
+                bucket_name=self.pred_data_bucket,
                 table_name=self.pred_db_insert_log,
-                folder=True,
             )
 
             for idx, f in enumerate(lst):
-                df = f[idx][1]
+                df = f[idx][0]
 
-                file = f[idx][2]
+                file = f[idx][1]
 
                 if file.endswith(".csv"):
-                    self.db_op.insert_dataframe_as_record(
+                    self.mongo.insert_dataframe_as_record(
                         data_frame=df,
                         db_name=good_data_db_name,
                         collection_name=good_data_collection_name,
@@ -98,10 +102,14 @@ class db_operation_pred:
 
     def export_collection_to_csv(self, good_data_db_name, good_data_collection_name):
         """
-        Method Name :   export_collection_to_csv
+        Method Name :   insert_good_data_as_record
+        Description :   This method inserts the good data in MongoDB as collection
 
-        Description :   This method extracts the inserted data to csv file, which will be used for preding
+        Output      :   A csv file stored in input files bucket, containing good data which was stored in MongoDB
+        On Failure  :   Write an exception log and then raise an exception
+
         Version     :   1.2
+        
         Revisions   :   moved setup to cloud
         """
         method_name = self.export_collection_to_csv.__name__
@@ -114,7 +122,7 @@ class db_operation_pred:
         )
 
         try:
-            df = self.db_op.get_collection_as_dataframe(
+            df = self.mongo.get_collection_as_dataframe(
                 db_name=good_data_db_name,
                 collection_name=good_data_collection_name,
                 table_name=self.pred_export_csv_log,
@@ -122,10 +130,10 @@ class db_operation_pred:
 
             self.s3.upload_df_as_csv(
                 data_frame=df,
-                file_name=self.pred_export_csv_file,
-                bucket=self.input_files_bucket,
-                dest_file_name=self.pred_export_csv_file,
-                table_name=self.pred_export_csv_log,
+                local_file_name=self.pred_export_csv_file,
+                bucket_file_name=self.pred_export_csv_file,
+                bucket_name=self.input_files_bucket,
+                table_name=self.input_files_bucket,
             )
 
             self.log_writer.start_log(

@@ -135,7 +135,11 @@ class raw_pred_data_validation:
                 table_name=self.pred_gen_log,
             )
 
-            regex = self.s3.read_text(file_name=self.scania_regex_file,bucket_name=self.input_files_bucket,table_name=self.pred_gen_log)
+            regex = self.s3.read_text(
+                file_name=self.scania_regex_file,
+                bucket_name=self.input_files_bucket,
+                table_name=self.pred_gen_log,
+            )
 
             self.log_writer.log(
                 table_name=self.pred_gen_log, log_message=f"Got {regex} pattern",

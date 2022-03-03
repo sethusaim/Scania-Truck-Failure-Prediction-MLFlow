@@ -383,7 +383,9 @@ class Preprocessor:
 
             pca = PCA(n_components=self.n_components)
 
-            pca_model_name = self.model_utils.get_model_name(model=pca, table_name=self.table_name)
+            pca_model_name = self.model_utils.get_model_name(
+                model=pca, table_name=self.table_name
+            )
 
             self.log_writer.log(
                 table_name=self.table_name,
