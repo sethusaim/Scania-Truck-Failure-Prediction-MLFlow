@@ -1,24 +1,25 @@
-from scania.data_transform.data_transformation_train import data_transform_train
-from scania.data_type_valid.data_type_valid_train import db_operation_train
-from scania.raw_data_validation.train_data_validation import raw_train_data_validation
-from utils.logger import app_logger
+from scania.data_transform.data_transformation_train import Data_Transform_Train
+from scania.data_type_valid.data_type_valid_train import DB_Operation_Train
+from scania.raw_data_validation.train_data_validation import Raw_Train_Data_Validation
+from utils.logger import App_Logger
 from utils.read_params import read_params
 
 
-class train_validation:
+class Train_Validation:
     """
     Description :   This class is used for validating all the training batch files
-
+    Written by  :   iNeuron Intelligence
+    
     Version     :   1.2
-    Revisions   :   moved to setup to cloud
+    Revisions   :   Moved to setup to cloud 
     """
 
     def __init__(self, bucket_name):
-        self.raw_data = raw_train_data_validation(raw_data_bucket_name=bucket_name)
+        self.raw_data = Raw_Train_Data_Validation(raw_data_bucket_name=bucket_name)
 
-        self.data_transform = data_transform_train()
+        self.data_transform = Data_Transform_Train()
 
-        self.db_operation = db_operation_train()
+        self.db_operation = DB_Operation_Train()
 
         self.config = read_params()
 
@@ -32,26 +33,29 @@ class train_validation:
             "scania_train_data_collection"
         ]
 
-        self.log_writer = app_logger()
+        self.log_writer = App_Logger()
 
     def training_validation(self):
         """
-        Method Name :   load_s3_obj
-        Description :   This method is used for validating the training btach files
+        Method Name :   training_validation
+        Description :   This method is responsible for converting raw data to cleaned data for training
+
+        Output      :   Raw data is converted to cleaned data for training
+        On Failure  :   Write an exception log and then raise an exception
 
         Version     :   1.2
         Revisions   :   moved setup to cloud
         """
         method_name = self.training_validation.__name__
 
-        self.log_writer.start_log(
-            key="start",
-            class_name=self.class_name,
-            method_name=method_name,
-            table_name=self.train_main_log,
-        )
-
         try:
+            self.log_writer.start_log(
+                key="start",
+                class_name=self.class_name,
+                method_name=method_name,
+                table_name=self.train_main_log,
+            )
+
             (
                 LengthOfDateStampInFile,
                 LengthOfTimeStampInFile,
@@ -88,7 +92,7 @@ class train_validation:
 
             self.db_operation.insert_good_data_as_record(
                 db_name=self.good_data_db_name,
-                table_name=self.good_data_collection_name,
+                collection_name=self.good_data_collection_name,
             )
 
             self.log_writer.log(
@@ -98,7 +102,7 @@ class train_validation:
 
             self.db_operation.export_collection_to_csv(
                 db_name=self.good_data_db_name,
-                table_name=self.good_data_collection_name,
+                collection_name=self.good_data_collection_name,
             )
 
             self.log_writer.start_log(

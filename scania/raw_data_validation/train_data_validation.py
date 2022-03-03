@@ -7,7 +7,7 @@ from utils.read_params import read_params
 
 class Raw_Train_Data_Validation:
     """
-    Description :   This method is used for validating the raw trainiction data
+    Description :   This method is used for validating the raw training data
     Written by  :   iNeuron Intelligence
     
     Version     :   1.2
@@ -54,9 +54,9 @@ class Raw_Train_Data_Validation:
     def values_from_schema(self):
         """
         Method Name :   values_from_schema
-        Description :   This method gets schema values from the schema_trainiction.json file
+        Description :   This method gets schema values from the schema_training.json file
 
-        Output      :   Schema values are extracted from the schema_trainiction.json file
+        Output      :   Schema values are extracted from the schema_training.json file
         On Failure  :   Write an exception log and then raise an exception
 
         Version     :   1.2
@@ -252,7 +252,7 @@ class Raw_Train_Data_Validation:
 
             self.log_writer.log(
                 table_name=self.train_name_valid_log,
-                log_message="Got trainiction files with absolute file name",
+                log_message="Got training files with absolute file name",
             )
 
             for file_name in train_batch_files:
