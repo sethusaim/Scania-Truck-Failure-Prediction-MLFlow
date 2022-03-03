@@ -2,7 +2,15 @@ import boto3
 from utils.read_params import read_params
 
 
-class create_log_table:
+class Create_Log_Table:
+    """
+    Description :   This class shall be used for creating the log tables in DynamoDB
+    Written by  :   iNeuron Intelligence
+    
+    Version     :   1.2
+    Revisions   :   Moved to setup to cloud 
+    """
+
     def __init__(self):
         self.config = read_params()
 
@@ -19,7 +27,10 @@ class create_log_table:
     def create_log_table(self, table_name):
         """
         Method Name :   create_log_table
-        Description :   This method is used for creating the table for log
+        Description :   This method create a log table in DynamoDB
+
+        Output      :   A table is created in DynamoDB with table_name
+        On Failure  :   Write an exception log and then raise an exception
 
         Version     :   1.2
         Revisions   :   moved setup to cloud
@@ -54,8 +65,11 @@ class create_log_table:
 
     def generate_log_tables(self, type):
         """
-        Method Name :   generate_table
-        Description :   This method is used for creating the table for log
+        Method Name :   generate_log_tables
+        Description :   This method generates the log tables based on type (train or pred)
+
+        Output      :   Log tables are generated based on the type
+        On Failure  :   Write an exception log and then raise an exception
 
         Version     :   1.2
         Revisions   :   moved setup to cloud

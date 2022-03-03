@@ -1,230 +1,254 @@
 from sklearn.metrics import accuracy_score, roc_auc_score
 from sklearn.model_selection import GridSearchCV
 
-from utils.logger import app_logger
+from utils.logger import App_Logger
 from utils.read_params import read_params
 
-log_writer = app_logger()
 
-config = read_params()
-
-
-def get_model_name(model, table_name):
+class Model_Utils:
     """
-    Method Name :   get_model_name
-    Description :   This method is used for getting the actual model name
-
-    Version     :   1.0
-    Revisions   :   None
-    """
-    method_name = get_model_name.__name__
-
-    log_writer.start_log(
-        key="start",
-        class_name=__file__,
-        method_name=method_name,
-        table_name=table_name,
-    )
-
-    try:
-        model_name = model.__class__.__name__
-
-        log_writer.log(
-            table_name=table_name, log_message=f"Got the {model} model_name",
-        )
-
-        log_writer.start_log(
-            key="exit",
-            class_name=__file__,
-            method_name=method_name,
-            table_name=table_name,
-        )
-
-        return model_name
-
-    except Exception as e:
-        log_writer.exception_log(
-            error=e,
-            class_name=__file__,
-            method_name=method_name,
-            table_name=table_name,
-        )
-
-
-def get_model_param_grid(model_key_name, table_name):
-    """
-    Method Name :   get_model_param_grid
-    Description :   This method is used for getting the param dict from params.yaml file
-
+    Description :   This class is used for all the model utils
+    Written by  :   iNeuron Intelligence
+    
     Version     :   1.2
-    Revisions   :   moved setup to cloud
+    Revisions   :   Moved to setup to cloud 
     """
-    method_name = get_model_param_grid.__name__
+    def __init__(self):
+        self.log_writer = App_Logger()
 
-    log_writer.start_log(
-        key="start",
-        class_name=__file__,
-        method_name=method_name,
-        table_name=table_name,
-    )
+        self.config = read_params()
 
-    try:
-        model_grid = {}
+        self.cv = self.config["model_utils"]["cv"]
 
-        model_param_name = config["model_params"][model_key_name]
+        self.verbose = self.config["model_utils"]["verbose"]
 
-        params_names = list(model_param_name.keys())
+        self.n_jobs = self.config["model_utils"]["n_jobs"]
 
-        for param in params_names:
-            model_grid[param] = model_param_name[param]
+        self.class_name = self.__class__.__name__
 
-        log_writer.log(
-            table_name=table_name,
-            log_message=f"Inserted {model_key_name} params to model_grid dict",
-        )
+    def get_model_name(self, model, table_name):
+        """
+        Method Name :   get_model_name
+        Description :   This method gets the model name from the particular model
 
-        log_writer.start_log(
-            key="exit",
-            class_name=__file__,
+        Output      :   A model name is returned
+        On Failure  :   Write an exception log and then raise an exception
+
+        Version     :   1.2
+        Revisions   :   moved setup to cloud
+        """
+
+        method_name = self.get_model_name.__name__
+
+        self.log_writer.start_log(
+            key="start",
+            class_name=self.class_name,
             method_name=method_name,
             table_name=table_name,
         )
 
-        return model_grid
+        try:
+            model_name = model.__class__.__name__
 
-    except Exception as e:
-        log_writer.exception_log(
-            error=e,
-            class_name=__file__,
-            method_name=method_name,
-            table_name=table_name,
-        )
-
-
-def get_model_score(model, test_x, test_y, table_name):
-    """
-    Method Name :   get_model_score
-    Description :   This method is used for calculating the best score for the model based on the test data
-
-    Version     :   1.2
-    Revisions   :   moved setup to cloud
-    """
-    method_name = get_model_score.__name__
-
-    log_writer.start_log(
-        key="start",
-        class_name=__file__,
-        method_name=method_name,
-        table_name=table_name,
-    )
-
-    try:
-        model_name = get_model_name(model=model, table_name=table_name)
-
-        preds = model.predict(test_x)
-
-        log_writer.log(
-            table_name=table_name,
-            log_message=f"Used {model_name} model to get predictions on test data",
-        )
-
-        if len(test_y.unique()) == 1:
-            model_score = accuracy_score(test_y, preds)
-
-            log_writer.log(
-                table_name=table_name,
-                log_message=f"Accuracy for {model_name} is {model_score}",
+            self.log_writer.log(
+                table_name=table_name, log_message=f"Got the {model} model_name",
             )
 
-        else:
-            model_score = roc_auc_score(test_y, preds)
-
-            log_writer.log(
-                table_name=table_name,
-                log_message=f"AUC score for {model_name} is {model_score}",
-            )
-
-            log_writer.start_log(
+            self.log_writer.start_log(
                 key="exit",
-                class_name=__file__,
+                class_name=self.class_name,
                 method_name=method_name,
                 table_name=table_name,
             )
 
-        return model_score
+            return model_name
 
-    except Exception as e:
-        log_writer.exception_log(
-            error=e,
-            class_name=__file__,
+        except Exception as e:
+            self.log_writer.exception_log(
+                error=e,
+                class_name=self.class_name,
+                method_name=method_name,
+                table_name=table_name,
+            )
+
+    def get_model_param_grid(self, model_key_name, table_name):
+        """
+        Method Name :   get_model_param_grid
+        Description :   This method gets the model param grid as specified in params.yaml file
+
+        Output      :   A model param grid is created
+        On Failure  :   Write an exception log and then raise an exception
+
+        Version     :   1.2
+        Revisions   :   moved setup to cloud
+        """
+
+        method_name = self.get_model_param_grid.__name__
+
+        self.log_writer.start_log(
+            key="start",
+            class_name=self.class_name,
             method_name=method_name,
             table_name=table_name,
         )
 
+        try:
+            model_grid = {}
 
-def get_model_params(model, model_key_name, x_train, y_train, table_name):
-    """
-    Method Name :   get_model_params
-    Description :   This method is used for finding the best params for the given model
+            model_param_name = self.config["model_params"][model_key_name]
 
-    Version     :   1.2
-    Revisions   :   moved setup to cloud
-    """
-    method_name = get_model_params.__name__
+            params_names = list(model_param_name.keys())
 
-    log_writer.start_log(
-        key="start",
-        class_name=__file__,
-        method_name=method_name,
-        table_name=table_name,
-    )
+            for param in params_names:
+                model_grid[param] = model_param_name[param]
 
-    try:
-        cv = config["model_utils"]["cv"]
+            self.log_writer.log(
+                table_name=table_name,
+                log_message=f"Inserted {model_key_name} params to model_grid dict",
+            )
 
-        verbose = config["model_utils"]["verbose"]
+            self.log_writer.start_log(
+                key="exit",
+                class_name=self.class_name,
+                method_name=method_name,
+                table_name=table_name,
+            )
 
-        n_jobs = config["model_utils"]["n_jobs"]
+            return model_grid
 
-        model_name = get_model_name(model=model, table_name=table_name)
+        except Exception as e:
+            self.log_writer.exception_log(
+                error=e,
+                class_name=self.class_name,
+                method_name=method_name,
+                table_name=table_name,
+            )
 
-        model_param_grid = get_model_param_grid(
-            model_key_name=model_key_name, table_name=table_name
-        )
+    def get_model_score(self, model, test_x, test_y, table_name):
+        """
+        Method Name :   get_model_score
+        Description :   This method gets model score againist the test data
 
-        model_grid = GridSearchCV(
-            estimator=model,
-            param_grid=model_param_grid,
-            cv=cv,
-            verbose=verbose,
-            n_jobs=n_jobs,
-        )
+        Output      :   A model score is returned 
+        On Failure  :   Write an exception log and then raise an exception
 
-        log_writer.log(
-            table_name=table_name,
-            log_message=f"Initialized {model_grid.__class__.__name__}  with {model_param_grid} as params",
-        )
+        Version     :   1.2
+        Revisions   :   moved setup to cloud
+        """
 
-        model_grid.fit(x_train, y_train)
+        method_name = self.get_model_score.__name__
 
-        log_writer.log(
-            table_name=table_name,
-            log_message=f"Found the best params for {model_name} model based on {model_param_grid} as params",
-        )
-
-        log_writer.start_log(
-            key="exit",
-            class_name=__file__,
+        self.log_writer.start_log(
+            key="start",
+            class_name=self.class_name,
             method_name=method_name,
             table_name=table_name,
         )
 
-        return model_grid.best_params_
+        try:
+            model_name = self.get_model_name(model=model, table_name=table_name)
 
-    except Exception as e:
-        log_writer.exception_log(
-            error=e,
-            class_name=__file__,
+            preds = model.predict(test_x)
+
+            self.log_writer.log(
+                table_name=table_name,
+                log_message=f"Used {model_name} model to get predictions on test data",
+            )
+
+            if len(test_y.unique()) == 1:
+                model_score = accuracy_score(test_y, preds)
+
+                self.log_writer.log(
+                    table_name=table_name,
+                    log_message=f"Accuracy for {model_name} is {model_score}",
+                )
+
+            else:
+                model_score = roc_auc_score(test_y, preds)
+
+                self.log_writer.log(
+                    table_name=table_name,
+                    log_message=f"AUC score for {model_name} is {model_score}",
+                )
+
+                self.log_writer.start_log(
+                    key="exit",
+                    class_name=self.class_name,
+                    method_name=method_name,
+                    table_name=table_name,
+                )
+
+            return model_score
+
+        except Exception as e:
+            self.log_writer.exception_log(
+                error=e,
+                class_name=self.class_name,
+                method_name=method_name,
+                table_name=table_name,
+            )
+
+    def get_model_params(self, model, model_key_name, x_train, y_train, table_name):
+        """
+        Method Name :   get_model_params
+        Description :   This method gets the model parameters based on model_key_name and train data
+
+        Output      :   Best model parameters are returned
+        On Failure  :   Write an exception log and then raise an exception
+
+        Version     :   1.2
+        Revisions   :   moved setup to cloud
+        """
+
+        method_name = self.get_model_params.__name__
+
+        self.log_writer.start_log(
+            key="start",
+            class_name=self.class_name,
             method_name=method_name,
             table_name=table_name,
         )
+
+        try:
+            model_name = self.get_model_name(model=model, table_name=table_name)
+
+            model_param_grid = self.get_model_param_grid(
+                model_key_name=model_key_name, table_name=table_name
+            )
+
+            model_grid = GridSearchCV(
+                estimator=model,
+                param_grid=model_param_grid,
+                cv=self.cv,
+                verbose=self.verbose,
+                n_jobs=self.n_jobs,
+            )
+
+            self.log_writer.log(
+                table_name=table_name,
+                log_message=f"Initialized {model_grid.__class__.__name__}  with {model_param_grid} as params",
+            )
+
+            model_grid.fit(x_train, y_train)
+
+            self.log_writer.log(
+                table_name=table_name,
+                log_message=f"Found the best params for {model_name} model based on {model_param_grid} as params",
+            )
+
+            self.log_writer.start_log(
+                key="exit",
+                class_name=self.class_name,
+                method_name=method_name,
+                table_name=table_name,
+            )
+
+            return model_grid.best_params_
+
+        except Exception as e:
+            self.log_writer.exception_log(
+                error=e,
+                class_name=self.class_name,
+                method_name=method_name,
+                table_name=table_name,
+            )
