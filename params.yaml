@@ -105,8 +105,8 @@ mlflow_config:
   serialization_format : cloudpickle  
 
 db_log:
-  db_train_log : scania_training_logs
-  db_pred_log : scania_prediction_logs
+  train : scania_training_logs
+  pred : scania_prediction_logs
 
 train_db_log:
   model_training : model_training_log

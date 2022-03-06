@@ -111,7 +111,7 @@ class Train_Model:
 
                 self.log_writer.log(
                     table_name=self.model_train_log,
-                    log_message="Seprated cluster features and cluster label for the cluster data",
+                    log_info="Seprated cluster features and cluster label for the cluster data",
                 )
 
                 x_train, x_test, y_train, y_test = train_test_split(
@@ -123,7 +123,7 @@ class Train_Model:
 
                 self.log_writer.log(
                     table_name=self.model_train_log,
-                    log_message=f"Performed train test split with test size as {self.test_size} and random state as {self.random_state}",
+                    log_info=f"Performed train test split with test size as {self.test_size} and random state as {self.random_state}",
                 )
 
                 (
@@ -183,7 +183,7 @@ class Train_Model:
                 except Exception as e:
                     self.log_writer.log(
                         table_name=self.model_train_log,
-                        log_message="Mlflow logging of params,metrics and models failed",
+                        log_info="Mlflow logging of params,metrics and models failed",
                     )
 
                     self.log_writer.exception_log(
@@ -195,7 +195,7 @@ class Train_Model:
 
             self.log_writer.log(
                 table_name=self.model_train_log,
-                log_message="Successful End of Training",
+                log_info="Successful End of Training",
             )
 
             self.log_writer.start_log(
@@ -210,7 +210,7 @@ class Train_Model:
         except Exception as e:
             self.log_writer.log(
                 table_name=self.model_train_log,
-                log_message="Unsuccessful End of Training",
+                log_info="Unsuccessful End of Training",
             )
 
             self.log_writer.exception_log(

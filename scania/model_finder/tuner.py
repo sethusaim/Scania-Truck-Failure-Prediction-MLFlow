@@ -69,7 +69,7 @@ class Model_Finder:
 
             self.log_writer.log(
                 table_name=self.table_name,
-                log_message=f"{self.ada_model_name} model best params are {self.adaboost_best_params}",
+                log_info=f"{self.ada_model_name} model best params are {self.adaboost_best_params}",
             )
 
             self.ada_model = AdaBoostClassifier(
@@ -80,14 +80,14 @@ class Model_Finder:
 
             self.log_writer.log(
                 table_name=self.table_name,
-                log_message=f"Initialized {self.ada_model_name} with {self.adaboost_best_params} as params",
+                log_info=f"Initialized {self.ada_model_name} with {self.adaboost_best_params} as params",
             )
 
             self.ada_model.fit(train_x, train_y)
 
             self.log_writer.log(
                 table_name=self.table_name,
-                log_message=f"Created {self.ada_model_name} based on the {self.adaboost_best_params} as params",
+                log_info=f"Created {self.ada_model_name} based on the {self.adaboost_best_params} as params",
             )
 
             self.log_writer.start_log(
@@ -152,7 +152,7 @@ class Model_Finder:
 
             self.log_writer.log(
                 table_name=self.table_name,
-                log_message=f"{self.rf_model_name} model best params are {self.rf_best_params}",
+                log_info=f"{self.rf_model_name} model best params are {self.rf_best_params}",
             )
 
             self.rf_model = RandomForestClassifier(
@@ -164,14 +164,14 @@ class Model_Finder:
 
             self.log_writer.log(
                 table_name=self.table_name,
-                log_message=f"Initialized {self.rf_model_name} with {self.rf_best_params} as params",
+                log_info=f"Initialized {self.rf_model_name} with {self.rf_best_params} as params",
             )
 
             self.rf_model.fit(train_x, train_y)
 
             self.log_writer.log(
                 table_name=self.table_name,
-                log_message=f"Created {self.rf_model_name} based on the {self.rf_best_params} as params",
+                log_info=f"Created {self.rf_model_name} based on the {self.rf_best_params} as params",
             )
 
             self.log_writer.start_log(
