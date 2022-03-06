@@ -194,8 +194,7 @@ class Train_Model:
                     )
 
             self.log_writer.log(
-                table_name=self.model_train_log,
-                log_info="Successful End of Training",
+                table_name=self.model_train_log, log_info="Successful End of Training",
             )
 
             self.log_writer.start_log(

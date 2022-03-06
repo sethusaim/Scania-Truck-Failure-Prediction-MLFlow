@@ -62,8 +62,7 @@ class Preprocessor:
             self.useful_data = self.data.drop(labels=self.columns, axis=1)
 
             self.log_writer.log(
-                table_name=self.table_name,
-                log_info=f"Dropped {columns} from {data}",
+                table_name=self.table_name, log_info=f"Dropped {columns} from {data}",
             )
 
             self.log_writer.start_log(
@@ -216,8 +215,7 @@ class Preprocessor:
                     cols_with_missing_values.append(cols[i])
 
             self.log_writer.log(
-                table_name=self.table_name,
-                log_info="created cols with missing values",
+                table_name=self.table_name, log_info="created cols with missing values",
             )
 
             if null_present:
@@ -294,8 +292,7 @@ class Preprocessor:
             data["class"] = data["class"].map({"'neg'": 0, "'pos'": 1})
 
             self.log_writer.log(
-                table_name=self.table_name,
-                log_info="Encoded target cols in dataframe",
+                table_name=self.table_name, log_info="Encoded target cols in dataframe",
             )
 
             self.log_writer.start_log(

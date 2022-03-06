@@ -195,8 +195,7 @@ class MongoDB_Operation:
             records = json.loads(data_frame.T.to_json()).values()
 
             self.log_writer.log(
-                table_name=table_name,
-                log_info=f"Converted dataframe to json records",
+                table_name=table_name, log_info=f"Converted dataframe to json records",
             )
 
             database = self.get_database(db_name, table_name=table_name)
