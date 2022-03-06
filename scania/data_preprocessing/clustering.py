@@ -19,9 +19,9 @@ class KMeans_Clustering:
 
         self.config = read_params()
 
-        self.input_files_bucket = self.config["bucket"]["input_files"]
+        self.input_files_bucket = self.config["s3_bucket"]["input_files"]
 
-        self.model_bucket_name = self.config["bucket"]["scania_model"]
+        self.model_bucket_name = self.config["s3_bucket"]["scania_model"]
 
         self.random_state = self.config["base"]["random_state"]
 
