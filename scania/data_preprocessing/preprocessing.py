@@ -338,7 +338,7 @@ class Preprocessor:
             data = data.apply(pd.to_numeric)
 
             for col in data.columns:
-                data[col] = data[col].replace(np.NaN, data[col].mean())
+                data[col] = data[col].replace(np.NaN, data[col].mean(), inplace=True)
 
             self.log_writer.start_log(
                 key="exit",
@@ -440,9 +440,9 @@ class Preprocessor:
             table_name=self.table_name,
         )
 
-        self.data = data
-
         try:
+            self.data = data
+
             self.scaler = StandardScaler()
 
             self.log_writer.log(
