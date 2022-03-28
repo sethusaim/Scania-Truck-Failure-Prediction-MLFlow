@@ -27,9 +27,9 @@ class Model_Finder:
 
         self.rf_model = RandomForestClassifier()
 
-    def get_best_model_for_adaboost(self, train_x, train_y):
+    def get_adaboost_model(self, train_x, train_y):
         """
-        Method Name :   get_best_model_for_adaboost
+        Method Name :   get_adaboost_model
         Description :   get the parameters for AdaBoost Algorithm which give the best accuracy.
                         Use Hyper Parameter Tuning.
         
@@ -39,37 +39,25 @@ class Model_Finder:
         Version     :   1.2
         Revisions   :   moved setup to cloud
         """
-        method_name = self.get_best_model_for_adaboost.__name__
+        method_name = self.get_adaboost_model.__name__
 
         self.log_writer.start_log(
             "start", self.class_name, method_name, self.log_file,
         )
 
         try:
-            self.ada_model_name = self.model_utils.get_model_name(
-                self.ada_model, self.log_file
-            )
+            self.ada_model_name = self.ada_model.__class__.__name__
 
             self.adaboost_best_params = self.model_utils.get_model_params(
-                self.ada_model, "adaboost_model", train_x, train_y, self.log_file,
+                self.ada_model, train_x, train_y, self.log_file
             )
-
-            self.n_estimators = self.adaboost_best_params["n_estimators"]
-
-            self.learning_rate = self.adaboost_best_params["learning_rate"]
-
-            self.random_state = self.adaboost_best_params["random_state"]
 
             self.log_writer.log(
                 self.log_file,
                 f"{self.ada_model_name} model best params are {self.adaboost_best_params}",
             )
 
-            self.ada_model = AdaBoostClassifier(
-                n_estimators=self.n_estimators,
-                learning_rate=self.learning_rate,
-                random_state=self.random_state,
-            )
+            self.ada_model.set_params(**self.adaboost_best_params)
 
             self.log_writer.log(
                 self.log_file,
@@ -94,9 +82,9 @@ class Model_Finder:
                 e, self.class_name, method_name, self.log_file,
             )
 
-    def get_best_model_for_rf(self, train_x, train_y):
+    def get_rf_model(self, train_x, train_y):
         """
-        Method Name :   get_best_model_for_rf
+        Method Name :   get_rf_model
         Description :   get the parameters for Random Forest Algorithm which give the best accuracy.
                         Use Hyper Parameter Tuning.
         
@@ -107,7 +95,7 @@ class Model_Finder:
         
         Revisions   :   moved setup to cloud
         """
-        method_name = self.get_best_model_for_rf.__name__
+        method_name = self.get_rf_model.__name__
 
         self.log_writer.start_log(
             "start", self.class_name, method_name, self.log_file,
@@ -117,28 +105,15 @@ class Model_Finder:
             self.rf_model_name = self.rf_model.__class__.__name__
 
             self.rf_best_params = self.model_utils.get_model_params(
-                self.rf_model, "rf_model", train_x, train_y, self.log_file,
+                self.rf_model, train_x, train_y, self.log_file
             )
-
-            self.criterion = self.rf_best_params["criterion"]
-
-            self.max_depth = self.rf_best_params["max_depth"]
-
-            self.max_features = self.rf_best_params["max_features"]
-
-            self.n_estimators = self.rf_best_params["n_estimators"]
 
             self.log_writer.log(
                 self.log_file,
                 f"{self.rf_model_name} model best params are {self.rf_best_params}",
             )
 
-            self.rf_model = RandomForestClassifier(
-                n_estimators=self.n_estimators,
-                criterion=self.criterion,
-                max_depth=self.max_depth,
-                max_features=self.max_features,
-            )
+            self.rf_model.set_params(**self.rf_best_params)
 
             self.log_writer.log(
                 self.log_file,
@@ -181,30 +156,28 @@ class Model_Finder:
         )
 
         try:
-            ada_model = self.get_best_model_for_adaboost(
-                train_x=train_x, train_y=train_y
+            self.ada_model = self.get_adaboost_model(train_x=train_x, train_y=train_y)
+
+            self.ada_model_score = self.model_utils.get_model_score(
+                self.ada_model, test_x, test_y, self.log_file,
             )
 
-            ada_model_score = self.model_utils.get_model_score(
-                ada_model, test_x, test_y, self.log_file,
-            )
+            self.rf_model = self.get_rf_model(train_x=train_x, train_y=train_y)
 
-            rf_model = self.get_best_model_for_rf(train_x=train_x, train_y=train_y)
-
-            rf_model_score = self.model_utils.get_model_score(
-                rf_model, test_x, test_y, self.log_file,
+            self.rf_model_score = self.model_utils.get_model_score(
+                self.rf_model, test_x, test_y, self.log_file,
             )
 
             self.log_writer.start_log(
                 "exit", self.class_name, method_name, self.log_file,
             )
 
-            return (
-                rf_model,
-                rf_model_score,
-                ada_model,
-                ada_model_score,
-            )
+            lst = [
+                (self.rf_model, self.rf_model_score),
+                (self.ada_model, self.ada_model_score),
+            ]
+
+            return lst
 
         except Exception as e:
             self.log_writer.exception_log(

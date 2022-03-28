@@ -11,8 +11,7 @@ from utils.read_params import read_params
 class MLFlow_Operation:
     """
     Description :    This class shall be used for handling all the mlflow operations
-    
-    
+
     Version     :   1.2
     Revisions   :   Moved to setup to cloud 
     """
@@ -40,9 +39,9 @@ class MLFlow_Operation:
 
         self.model_save_format = self.config["model_utils"]["save_format"]
 
-    def get_experiment_mlflow(self, exp_name):
+    def get_experiment_from_mlflow(self, exp_name):
         """
-        Method Name :   get_experiment_mlflow
+        Method Name :   get_experiment_from_mlflow
         Description :   This method gets the experiment from mlflow server using the experiment name
 
         Output      :   An experiment which was stored in mlflow server
@@ -52,11 +51,9 @@ class MLFlow_Operation:
         
         Revisions   :   moved setup to cloud
         """
-        method_name = self.get_experiment_mlflow.__name__
+        method_name = self.get_experiment_from_mlflow.__name__
 
-        self.log_writer.start_log(
-            "start", self.class_name, method_name, self.log_file,
-        )
+        self.log_writer.start_log("start", self.class_name, method_name, self.log_file)
 
         try:
             exp = mlflow.get_experiment_by_name(name=exp_name)
@@ -66,19 +63,19 @@ class MLFlow_Operation:
             )
 
             self.log_writer.start_log(
-                "exit", self.class_name, method_name, self.log_file,
+                "exit", self.class_name, method_name, self.log_file
             )
 
             return exp
 
         except Exception as e:
             self.log_writer.exception_log(
-                e, self.class_name, method_name, self.log_file,
+                e, self.class_name, method_name, self.log_file
             )
 
-    def get_runs_mlflow(self, exp_id):
+    def get_runs_from_mlflow(self, exp_id):
         """
-        Method Name :   get_runs_mlflow
+        Method Name :   get_runs_from_mlflow
         Description :   This method gets the runs from the mlflow server for a particular experiment id
 
         Output      :   A pandas series object consisting of runs for the particular experiment id
@@ -88,11 +85,9 @@ class MLFlow_Operation:
         
         Revisions   :   moved setup to cloud
         """
-        method_name = self.get_runs_mlflow.__name__
+        method_name = self.get_runs_from_mlflow.__name__
 
-        self.log_writer.start_log(
-            "start", self.class_name, method_name, self.log_file,
-        )
+        self.log_writer.start_log("start", self.class_name, method_name, self.log_file)
 
         try:
             runs = mlflow.search_runs(experiment_ids=exp_id)
@@ -103,14 +98,14 @@ class MLFlow_Operation:
             )
 
             self.log_writer.start_log(
-                "exit", self.class_name, method_name, self.log_file,
+                "exit", self.class_name, method_name, self.log_file
             )
 
             return runs
 
         except Exception as e:
             self.log_writer.exception_log(
-                e, self.class_name, method_name, self.log_file,
+                e, self.class_name, method_name, self.log_file
             )
 
     def set_mlflow_experiment(self, experiment_name):
@@ -127,9 +122,7 @@ class MLFlow_Operation:
         """
         method_name = self.set_mlflow_experiment.__name__
 
-        self.log_writer.start_log(
-            "start", self.class_name, method_name, self.log_file,
-        )
+        self.log_writer.start_log("start", self.class_name, method_name, self.log_file)
 
         try:
             mlflow.set_experiment(experiment_name=experiment_name)
@@ -139,12 +132,12 @@ class MLFlow_Operation:
             )
 
             self.log_writer.start_log(
-                "exit", self.class_name, method_name, self.log_file,
+                "exit", self.class_name, method_name, self.log_file
             )
 
         except Exception as e:
             self.log_writer.exception_log(
-                e, self.class_name, method_name, self.log_file,
+                e, self.class_name, method_name, self.log_file
             )
 
     def get_mlflow_client(self, server_uri):
@@ -161,9 +154,7 @@ class MLFlow_Operation:
         """
         method_name = self.get_mlflow_client.__name__
 
-        self.log_writer.start_log(
-            "start", self.class_name, method_name, self.log_file,
-        )
+        self.log_writer.start_log("start", self.class_name, method_name, self.log_file)
 
         try:
             client = MlflowClient(tracking_uri=server_uri)
@@ -173,50 +164,14 @@ class MLFlow_Operation:
             )
 
             self.log_writer.start_log(
-                "exit", self.class_name, method_name, self.log_file,
+                "exit", self.class_name, method_name, self.log_file
             )
 
             return client
 
         except Exception as e:
             self.log_writer.exception_log(
-                e, self.class_name, method_name, self.log_file,
-            )
-
-    def get_remote_server_uri(self):
-        """
-        Method Name :   get_remote_server_uri
-        Description :   This method gets the remote server uri from environment variables declared
-
-        Output      :   A variable which stores the remote server uri
-        On Failure  :   Write an exception log and then raise an exception
-
-        Version     :   1.2
-        
-        Revisions   :   moved setup to cloud
-        """
-        method_name = self.get_remote_server_uri.__name__
-
-        self.log_writer.start_log(
-            "start", self.class_name, method_name, self.log_file,
-        )
-
-        try:
-            remote_server_uri = os.environ["MLFLOW_TRACKING_URI"]
-
-            self.log_writer.log(
-                self.log_file, "Got mlflow tracking uri",
-            )
-
-            self.log_writer.start_log(
-                "exit", self.class_name, method_name, self.log_file,
-            )
-
-            return remote_server_uri
-
-        except Exception as e:
-            self.log_writer.exception_log(
-                e, self.class_name, method_name, self.log_file,
+                e, self.class_name, method_name, self.log_file
             )
 
     def set_mlflow_tracking_uri(self):
@@ -233,12 +188,10 @@ class MLFlow_Operation:
         """
         method_name = self.set_mlflow_tracking_uri.__name__
 
-        self.log_writer.start_log(
-            "start", self.class_name, method_name, self.log_file,
-        )
+        self.log_writer.start_log("start", self.class_name, method_name, self.log_file)
 
         try:
-            server_uri = self.get_remote_server_uri()
+            server_uri = os.environ["MLFLOW_TRACKING_URI"]
 
             mlflow.set_tracking_uri(server_uri)
 
@@ -247,12 +200,12 @@ class MLFlow_Operation:
             )
 
             self.log_writer.start_log(
-                "exit", self.class_name, method_name, self.log_file,
+                "exit", self.class_name, method_name, self.log_file
             )
 
         except Exception as e:
             self.log_writer.exception_log(
-                e, self.class_name, method_name, self.log_file,
+                e, self.class_name, method_name, self.log_file
             )
 
     def get_mlflow_models(self):
@@ -269,12 +222,10 @@ class MLFlow_Operation:
         """
         method_name = self.get_mlflow_models.__name__
 
-        self.log_writer.start_log(
-            "start", self.class_name, method_name, self.log_file,
-        )
+        self.log_writer.start_log("start", self.class_name, method_name, self.log_file)
 
         try:
-            remote_server_uri = self.get_remote_server_uri()
+            remote_server_uri = os.environ["MLFLOW_TRACKING_URI"]
 
             client = self.get_mlflow_client(server_uri=remote_server_uri)
 
@@ -285,14 +236,14 @@ class MLFlow_Operation:
             )
 
             self.log_writer.start_log(
-                "exit", self.class_name, method_name, self.log_file,
+                "exit", self.class_name, method_name, self.log_file
             )
 
             return reg_model_names
 
         except Exception as e:
             self.log_writer.exception_log(
-                e, self.class_name, method_name, self.log_file,
+                e, self.class_name, method_name, self.log_file
             )
 
     def search_mlflow_models(self, order):
@@ -309,12 +260,10 @@ class MLFlow_Operation:
         """
         method_name = self.search_mlflow_models.__name__
 
-        self.log_writer.start_log(
-            "start", self.class_name, method_name, self.log_file,
-        )
+        self.log_writer.start_log("start", self.class_name, method_name, self.log_file)
 
         try:
-            remote_server_uri = self.get_remote_server_uri()
+            remote_server_uri = os.environ["MLFLOW_TRACKING_URI"]
 
             client = self.get_mlflow_client(server_uri=remote_server_uri)
 
@@ -325,14 +274,14 @@ class MLFlow_Operation:
             )
 
             self.log_writer.start_log(
-                "exit", self.class_name, method_name, self.log_file,
+                "exit", self.class_name, method_name, self.log_file
             )
 
             return results
 
         except Exception as e:
             self.log_writer.exception_log(
-                e, self.class_name, method_name, self.log_file,
+                e, self.class_name, method_name, self.log_file
             )
 
     def log_model(self, model, model_name):
@@ -349,13 +298,11 @@ class MLFlow_Operation:
         """
         method_name = self.log_model.__name__
 
-        self.log_writer.start_log(
-            "start", self.class_name, method_name, self.log_file,
-        )
+        self.log_writer.start_log("start", self.class_name, method_name, self.log_file)
 
         try:
             mlflow.sklearn.log_model(
-                sk_mode=model,
+                sk_model=model,
                 serialization_format=self.mlflow_save_format,
                 registered_model_name=model_name,
                 artifact_path=model_name,
@@ -366,12 +313,12 @@ class MLFlow_Operation:
             )
 
             self.log_writer.start_log(
-                "exit", self.class_name, method_name, self.log_file,
+                "exit", self.class_name, method_name, self.log_file
             )
 
         except Exception as e:
             self.log_writer.exception_log(
-                e, self.class_name, method_name, self.log_file,
+                e, self.class_name, method_name, self.log_file
             )
 
     def log_metric(self, model_name, metric):
@@ -388,9 +335,7 @@ class MLFlow_Operation:
         """
         method_name = self.log_metric.__name__
 
-        self.log_writer.start_log(
-            "start", self.class_name, method_name, self.log_file,
-        )
+        self.log_writer.start_log("start", self.class_name, method_name, self.log_file)
 
         try:
             model_score_name = f"{model_name}-best_score"
@@ -402,12 +347,12 @@ class MLFlow_Operation:
             )
 
             self.log_writer.start_log(
-                "exit", self.class_name, method_name, self.log_file,
+                "exit", self.class_name, method_name, self.log_file
             )
 
         except Exception as e:
             self.log_writer.exception_log(
-                e, self.class_name, method_name, self.log_file,
+                e, self.class_name, method_name, self.log_file
             )
 
     def log_param(self, idx, model, model_name, param):
@@ -424,9 +369,7 @@ class MLFlow_Operation:
         """
         method_name = self.log_param.__name__
 
-        self.log_writer.start_log(
-            "start", self.class_name, method_name, self.log_file,
-        )
+        self.log_writer.start_log("start", self.class_name, method_name, self.log_file)
 
         try:
             model_param_name = model_name + str(idx) + f"-{param}"
@@ -438,15 +381,15 @@ class MLFlow_Operation:
             )
 
             self.log_writer.start_log(
-                "exit", self.class_name, method_name, self.log_file,
+                "exit", self.class_name, method_name, self.log_file
             )
 
         except Exception as e:
             self.log_writer.exception_log(
-                e, self.class_name, method_name, self.log_file,
+                e, self.class_name, method_name, self.log_file
             )
 
-    def log_all_for_model(self, idx, model, model_param_name, model_score):
+    def log_all_for_model(self, model, model_score, idx=None):
         """
         Method Name :   log_all_for_model
         Description :   This method logs model,model params and model score to mlflow server
@@ -465,7 +408,7 @@ class MLFlow_Operation:
                 "start", self.class_name, method_name, self.log_file,
             )
 
-            base_model_name = self.model_utils.get_model_name(model, self.log_file)
+            base_model_name = model.__class__.__name__
 
             if base_model_name is "KMeans":
                 self.log_model(model, base_model_name)
@@ -477,34 +420,31 @@ class MLFlow_Operation:
                     self.log_file, f"Got the model name as {model_name}",
                 )
 
-                model_params_list = list(
-                    self.config["model_params"][model_param_name].keys()
-                )
+                model_params_list = list(self.config[model_name].keys())
 
                 self.log_writer.log(
-                    self.log_file,
-                    f"Created a list of params based on {model_param_name}",
+                    self.log_file, f"Created a list of params based on {model_name}",
                 )
 
                 for param in model_params_list:
-                    self.log_param(
-                        idx, model, model_name, param=param,
-                    )
+                    self.log_param(idx, model, model_name, param=param)
 
                 self.log_model(model, model_name)
 
                 self.log_metric(model_name, metric=float(model_score))
 
             self.log_writer.start_log(
-                "exit", self.class_name, method_name, self.log_file,
+                "exit", self.class_name, method_name, self.log_file
             )
 
         except Exception as e:
             self.log_writer.exception_log(
-                e, self.class_name, method_name, self.log_file,
+                e, self.class_name, method_name, self.log_file
             )
 
-    def transition_mlflow_model(self, model_version, stage, model_name, bucket):
+    def transition_mlflow_model(
+        self, model_version, stage, model_name, from_bucket, to_bucket
+    ):
         """
         Method Name :   transition_mlflow_model
         Description :   This method transitions mlflow model from one stage to other stage, and does the same in s3 bucket
@@ -518,12 +458,10 @@ class MLFlow_Operation:
         """
         method_name = self.transition_mlflow_model.__name__
 
-        self.log_writer.start_log(
-            "start", self.class_name, method_name, self.log_file,
-        )
+        self.log_writer.start_log("start", self.class_name, method_name, self.log_file)
 
         try:
-            remote_server_uri = self.get_remote_server_uri()
+            remote_server_uri = os.environ["MLFLOW_TRACKING_URI"]
 
             current_version = model_version
 
@@ -563,7 +501,11 @@ class MLFlow_Operation:
                 )
 
                 self.s3.copy_data(
-                    trained_model_file, bucket, prod_model_file, bucket, self.log_file,
+                    trained_model_file,
+                    from_bucket,
+                    prod_model_file,
+                    to_bucket,
+                    self.log_file,
                 )
 
             elif stage == "Staging":
@@ -580,7 +522,11 @@ class MLFlow_Operation:
                 )
 
                 self.s3.copy_data(
-                    trained_model_file, bucket, stag_model_file, bucket, self.log_file,
+                    trained_model_file,
+                    from_bucket,
+                    stag_model_file,
+                    to_bucket,
+                    self.log_file,
                 )
 
             else:
@@ -589,10 +535,10 @@ class MLFlow_Operation:
                 )
 
             self.log_writer.start_log(
-                "exit", self.class_name, method_name, self.log_file,
+                "exit", self.class_name, method_name, self.log_file
             )
 
         except Exception as e:
             self.log_writer.exception_log(
-                e, self.class_name, method_name, self.log_file,
+                e, self.class_name, method_name, self.log_file
             )

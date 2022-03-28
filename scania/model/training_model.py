@@ -70,15 +70,11 @@ class Train_Model:
             if is_null_present:
                 data = self.preprocessor.impute_missing_values(X)
 
-            X, Y = self.preprocessor.separate_label_feature(
-                data, label_column_name=self.target_col
-            )
+            X, Y = self.preprocessor.separate_label_feature(data, self.target_col)
 
             number_of_clusters = self.kmeans_op.elbow_plot(X)
 
-            X, kmeans_model = self.kmeans_op.create_clusters(
-                data=X, number_of_clusters=number_of_clusters
-            )
+            X, kmeans_model = self.kmeans_op.create_clusters(X, number_of_clusters)
 
             X["Labels"] = Y
 
