@@ -116,7 +116,7 @@ class Prediction:
 
         try:
             list_of_files = self.s3.get_files_from_folder(
-                bucket, folder_name=self.prod_model_dir, log_file,
+                bucket, self.prod_model_dir, log_file,
             )
 
             for file in list_of_files:

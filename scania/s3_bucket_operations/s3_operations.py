@@ -305,7 +305,7 @@ class S3_Operation:
         )
         try:
             files = self.get_files_from_folder(
-                folder_name=folder_name, bucket, log_file,
+                folder_name, bucket, log_file,
             )
 
             lst = [

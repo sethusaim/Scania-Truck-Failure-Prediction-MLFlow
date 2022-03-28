@@ -66,16 +66,11 @@ class Raw_Pred_Data_Validation:
 
         try:
             self.log_writer.start_log(
-                "start",
-                self.class_name,
-                method_name,
-                self.pred_schema_log,
+                "start", self.class_name, method_name, self.pred_schema_log,
             )
 
             dic = self.s3.read_json(
-                self.pred_schema_file,
-                self.input_files_bucket,
-                self.pred_schema_log,
+                self.pred_schema_file, self.input_files_bucket, self.pred_schema_log,
             )
 
             LengthOfDateStampInFile = dic["LengthOfDateStampInFile"]
@@ -100,18 +95,12 @@ class Raw_Pred_Data_Validation:
             )
 
             self.log_writer.start_log(
-                "exit",
-                self.class_name,
-                method_name,
-                self.pred_schema_log,
+                "exit", self.class_name, method_name, self.pred_schema_log,
             )
 
         except Exception as e:
             self.log_writer.exception_log(
-                e,
-                self.class_name,
-                method_name,
-                self.pred_schema_log,
+                e, self.class_name, method_name, self.pred_schema_log,
             )
 
         return (
@@ -136,16 +125,11 @@ class Raw_Pred_Data_Validation:
 
         try:
             self.log_writer.start_log(
-                "start",
-                self.class_name,
-                method_name,
-                self.pred_gen_log,
+                "start", self.class_name, method_name, self.pred_gen_log,
             )
 
             regex = self.s3.read_text(
-                self.regex_file,
-                self.input_files_bucket,
-                self.pred_gen_log,
+                self.regex_file, self.input_files_bucket, self.pred_gen_log,
             )
 
             self.log_writer.log(
@@ -153,20 +137,14 @@ class Raw_Pred_Data_Validation:
             )
 
             self.log_writer.start_log(
-                "exit",
-                self.class_name,
-                method_name,
-                self.pred_gen_log,
+                "exit", self.class_name, method_name, self.pred_gen_log,
             )
 
             return regex
 
         except Exception as e:
             self.log_writer.exception_log(
-                e,
-                self.class_name,
-                method_name,
-                self.pred_gen_log,
+                e, self.class_name, method_name, self.pred_gen_log,
             )
 
     def create_dirs_for_good_bad_data(self, log_file):
@@ -183,38 +161,25 @@ class Raw_Pred_Data_Validation:
         method_name = self.create_dirs_for_good_bad_data.__name__
 
         self.log_writer.start_log(
-            "start",
-            self.class_name,
-            method_name,
-            log_file,
+            "start", self.class_name, method_name, log_file,
         )
 
         try:
             self.s3.create_folder(
-                folder_name=self.good_pred_data_dir,
-                self.pred_data_bucket,
-                log_file,
+                self.good_pred_data_dir, self.pred_data_bucket, log_file,
             )
 
             self.s3.create_folder(
-                folder_name=self.bad_pred_data_dir,
-                self.pred_data_bucket,
-                log_file,
+                self.bad_pred_data_dir, self.pred_data_bucket, log_file,
             )
 
             self.log_writer.start_log(
-                "exit",
-                self.class_name,
-                method_name,
-                log_file,
+                "exit", self.class_name, method_name, log_file,
             )
 
         except Exception as e:
             self.log_writer.exception_log(
-                e,
-                self.class_name,
-                method_name,
-                log_file,
+                e, self.class_name, method_name, log_file,
             )
 
     def validate_raw_fname(
@@ -233,19 +198,14 @@ class Raw_Pred_Data_Validation:
         method_name = self.validate_raw_fname.__name__
 
         self.log_writer.start_log(
-            "start",
-            self.class_name,
-            method_name,
-            self.pred_name_valid_log,
+            "start", self.class_name, method_name, self.pred_name_valid_log,
         )
 
         try:
             self.create_dirs_for_good_bad_data(self.pred_name_valid_log)
 
             onlyfiles = self.s3.get_files_from_folder(
-                self.raw_data_bucket,
-                folder_name=self.raw_pred_data_dir,
-                self.pred_name_valid_log,
+                self.raw_data_bucket, self.raw_pred_data_dir, self.pred_name_valid_log,
             )
 
             pred_batch_files = [f.split("/")[1] for f in onlyfiles]
@@ -309,18 +269,12 @@ class Raw_Pred_Data_Validation:
                     )
 
             self.log_writer.start_log(
-                "exit",
-                self.class_name,
-                method_name,
-                self.pred_name_valid_log,
+                "exit", self.class_name, method_name, self.pred_name_valid_log,
             )
 
         except Exception as e:
             self.log_writer.exception_log(
-                e,
-                self.class_name,
-                method_name,
-                self.pred_name_valid_log,
+                e, self.class_name, method_name, self.pred_name_valid_log,
             )
 
     def validate_col_length(self, NumberofColumns):
@@ -337,17 +291,12 @@ class Raw_Pred_Data_Validation:
         method_name = self.validate_col_length.__name__
 
         self.log_writer.start_log(
-            "start",
-            self.class_name,
-            method_name,
-            self.pred_col_valid_log,
+            "start", self.class_name, method_name, self.pred_col_valid_log,
         )
 
         try:
             lst = self.s3.read_csv_from_folder(
-                folder_name=self.good_pred_data_dir,
-                self.pred_data_bucket,
-                self.pred_col_valid_log,
+                self.good_pred_data_dir, self.pred_data_bucket, self.pred_col_valid_log,
             )
 
             for idx, f in enumerate(lst):
@@ -376,18 +325,12 @@ class Raw_Pred_Data_Validation:
                     pass
 
             self.log_writer.start_log(
-                "exit",
-                self.class_name,
-                method_name,
-                self.pred_col_valid_log,
+                "exit", self.class_name, method_name, self.pred_col_valid_log,
             )
 
         except Exception as e:
             self.log_writer.exception_log(
-                e,
-                self.class_name,
-                method_name,
-                self.pred_col_valid_log,
+                e, self.class_name, method_name, self.pred_col_valid_log,
             )
 
     def validate_missing_values_in_col(self):
@@ -404,15 +347,12 @@ class Raw_Pred_Data_Validation:
         method_name = self.validate_missing_values_in_col.__name__
 
         self.log_writer.start_log(
-            "start",
-            self.class_name,
-            method_name,
-            self.pred_missing_value_log,
+            "start", self.class_name, method_name, self.pred_missing_value_log,
         )
 
         try:
             lst = self.s3.read_csv_from_folder(
-                folder_name=self.good_pred_data_dir,
+                self.good_pred_data_dir,
                 self.pred_data_bucket,
                 self.pred_missing_value_log,
             )
@@ -458,16 +398,10 @@ class Raw_Pred_Data_Validation:
                     pass
 
                 self.log_writer.start_log(
-                    "exit",
-                    self.class_name,
-                    method_name,
-                    self.pred_missing_value_log,
+                    "exit", self.class_name, method_name, self.pred_missing_value_log,
                 )
 
         except Exception as e:
             self.log_writer.exception_log(
-                e,
-                self.class_name,
-                method_name,
-                self.pred_missing_value_log,
+                e, self.class_name, method_name, self.pred_missing_value_log,
             )

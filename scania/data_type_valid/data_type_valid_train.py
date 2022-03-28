@@ -57,7 +57,7 @@ class DB_Operation_Train:
 
         try:
             lst = self.s3.read_csv_from_folder(
-                folder_name=self.good_data_train_dir,
+                self.good_data_train_dir,
                 self.train_data_bucket,
                 self.train_db_insert_log,
             )
@@ -127,8 +127,8 @@ class DB_Operation_Train:
 
             self.s3.upload_df_as_csv(
                 df,
-                local_self.train_export_csv_file,
-                bucket_self.train_export_csv_file,
+                self..train_export_csv_file,
+                self.train_export_csv_file,
                 self.input_files_bucket,
                 self.input_files_bucket,
             )

@@ -41,10 +41,7 @@ class Data_Transform_Pred:
         method_name = self.add_quotes_to_string.__name__
 
         self.log_writer.start_log(
-            "start",
-            self.class_name,
-            method_name,
-            self.pred_data_transform_log,
+            "start", self.class_name, method_name, self.pred_data_transform_log,
         )
 
         try:
@@ -79,21 +76,15 @@ class Data_Transform_Pred:
                     df,
                     abs_f,
                     self.pred_data_bucket,
-                    dest_file,
+                    file,
                     self.pred_data_transform_log,
                 )
 
             self.log_writer.start_log(
-                "exit",
-                self.class_name,
-                method_name,
-                self.pred_data_transform_log,
+                "exit", self.class_name, method_name, self.pred_data_transform_log,
             )
 
         except Exception as e:
             self.log_writer.exception_log(
-                e,
-                self.class_name,
-                method_name,
-                self.pred_data_transform_log,
+                e, self.class_name, method_name, self.pred_data_transform_log,
             )
