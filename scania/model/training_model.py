@@ -1,11 +1,11 @@
-import mlflow
 from scania.data_ingestion.data_loader_train import Data_Getter_Train
 from scania.data_preprocessing.clustering import KMeans_Clustering
 from scania.data_preprocessing.preprocessing import Preprocessor
 from scania.mlflow_utils.mlflow_operations import MLFlow_Operation
 from scania.model_finder.tuner import Model_Finder
 from scania.s3_bucket_operations.s3_operations import S3_Operation
-from sklearn.model_selection import train_test_split
+
+from utils.model_utils import Model_Utils
 from utils.logger import App_Logger
 from utils.read_params import read_params
 
@@ -52,7 +52,7 @@ class Train_Model:
 
         self.kmeans_op = KMeans_Clustering(self.model_train_log)
 
-        self.model_finder = Model_Finder(self.model_train_log)
+        self.model_utils = Model_Utils()
 
         self.s3 = S3_Operation()
 
@@ -114,8 +114,13 @@ class Train_Model:
                     log_info="Seprated cluster features and cluster label for the cluster data",
                 )
 
-                
-
+                self.model_utils.train_and_log_models(
+                    cluster_features,
+                    cluster_label,
+                    self.model_train_log,
+                    idx=i,
+                    kmeans=kmeans_model,
+                )
 
             self.log_writer.log(
                 self.model_train_log, log_info="Successful End of Training",
