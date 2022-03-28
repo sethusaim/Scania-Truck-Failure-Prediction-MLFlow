@@ -14,8 +14,8 @@ class Train_Validation:
     Revisions   :   Moved to setup to cloud 
     """
 
-    def __init__(self, bucket_name):
-        self.raw_data = Raw_Train_Data_Validation(raw_data_bucket_name=bucket_name)
+    def __init__(self, bucket):
+        self.raw_data = Raw_Train_Data_Validation(raw_data_bucket=bucket)
 
         self.data_transform = Data_Transform_Train()
 

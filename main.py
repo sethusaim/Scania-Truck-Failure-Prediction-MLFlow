@@ -1,6 +1,4 @@
 import json
-import os
-import time
 
 import uvicorn
 from fastapi import FastAPI, Request
@@ -13,11 +11,8 @@ from scania.model.prediction_from_model import Prediction
 from scania.model.training_model import Train_Model
 from scania.validation_insertion.prediction_validation_insertion import Pred_Validation
 from scania.validation_insertion.train_validation_insertion import Train_Validation
-from utils.log_tables import Create_Log_Table
+from utils.main_utils import upload_logs
 from utils.read_params import read_params
-
-os.putenv("LANG", "en_US.UTF-8")
-os.putenv("LC_ALL", "en_US.UTF-8")
 
 app = FastAPI()
 
@@ -46,15 +41,7 @@ async def index(request: Request):
 @app.get("/train")
 async def trainRouteClient():
     try:
-        raw_data_train_bucket_name = config["s3_bucket"]["scania_raw_data"]
-
-        table = Create_Log_Table()
-
-        table.generate_log_tables(type="train")
-
-        time.sleep(5)
-
-        train_val = Train_Validation(bucket_name=raw_data_train_bucket_name)
+        train_val = Train_Validation(config["s3_bucket"]["scania_raw_data"])
 
         train_val.training_validation()
 
@@ -66,22 +53,18 @@ async def trainRouteClient():
 
         load_prod_model.load_production_model()
 
-    except Exception as e:
-        return Response("Error Occurred! %s" % e)
+        upload_logs("logs", config["s3_bucket"]["input_files"])
 
-    return Response("Training successfull!!")
+        return Response("Training successfull!!")
+
+    except Exception as e:
+        return Response(f"Error Occurred! {e}")
 
 
 @app.get("/predict")
 async def predictRouteClient():
     try:
-        raw_data_pred_bucket_name = config["s3_bucket"]["scania_raw_data"]
-
-        table = Create_Log_Table()
-
-        table.generate_log_tables(type="pred")
-
-        pred_val = Pred_Validation(raw_data_pred_bucket_name)
+        pred_val = Pred_Validation(config["s3_bucket"]["scania_raw_data"])
 
         pred_val.prediction_validation()
 
@@ -94,7 +77,7 @@ async def predictRouteClient():
         )
 
     except Exception as e:
-        return Response("Error Occurred! %s" % e)
+        return Response(f"Error Occurred! {e}")
 
 
 if __name__ == "__main__":

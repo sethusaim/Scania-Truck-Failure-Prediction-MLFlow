@@ -21,7 +21,7 @@ class KMeans_Clustering:
 
         self.input_files_bucket = self.config["s3_bucket"]["input_files"]
 
-        self.model_bucket_name = self.config["s3_bucket"]["scania_model"]
+        self.model_bucket = self.config["s3_bucket"]["scania_model"]
 
         self.random_state = self.config["base"]["random_state"]
 
@@ -93,7 +93,7 @@ class KMeans_Clustering:
             self.s3.upload_file(
                 from_file_name=self.elbow_plot_file,
                 to_file_name=self.elbow_plot_file,
-                bucket_name=self.input_files_bucket,
+                bucket=self.input_files_bucket,
                 table_name=self.table_name,
             )
 
@@ -160,7 +160,7 @@ class KMeans_Clustering:
             self.s3.save_model(
                 model=self.kmeans,
                 model_dir=self.trained_model_dir,
-                model_bucket_name=self.model_bucket_name,
+                model_bucket=self.model_bucket,
                 table_name=self.table_name,
             )
 

@@ -26,7 +26,7 @@ class Train_Model:
 
         self.model_train_log = self.config["train_db_log"]["model_training"]
 
-        self.model_bucket_name = self.config["s3_bucket"]["phising_model"]
+        self.model_bucket = self.config["s3_bucket"]["phising_model"]
 
         self.test_size = self.config["base"]["test_size"]
 
@@ -139,7 +139,7 @@ class Train_Model:
                     model=xgb_model,
                     idx=i,
                     model_dir=self.train_model_dir,
-                    model_bucket_name=self.model_bucket_name,
+                    model_bucket=self.model_bucket,
                     table_name=self.model_train_log,
                 )
 
@@ -147,7 +147,7 @@ class Train_Model:
                     model=rf_model,
                     idx=i,
                     model_dir=self.train_model_dir,
-                    model_bucket_name=self.model_bucket_name,
+                    model_bucket=self.model_bucket,
                     table_name=self.model_train_log,
                 )
 
