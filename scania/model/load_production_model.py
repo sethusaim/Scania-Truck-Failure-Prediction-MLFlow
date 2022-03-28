@@ -51,10 +51,7 @@ class Load_Prod_Model:
         method_name = self.create_folders_for_prod_and_stag.__name__
 
         self.log_writer.start_log(
-            "start",
-            self.class_name,
-            method_name,
-            log_file,
+            "start", self.class_name, method_name, log_file,
         )
 
         try:
@@ -67,18 +64,12 @@ class Load_Prod_Model:
             )
 
             self.log_writer.start_log(
-                "exit",
-                self.class_name,
-                method_name,
-                log_file,
+                "exit", self.class_name, method_name, log_file,
             )
 
         except Exception as e:
             self.log_writer.exception_log(
-                e,
-                self.class_name,
-                method_name,
-                log_file,
+                e, self.class_name, method_name, log_file,
             )
 
     def load_production_model(self):
@@ -96,10 +87,7 @@ class Load_Prod_Model:
         method_name = self.load_production_model.__name__
 
         self.log_writer.start_log(
-            "start",
-            self.class_name,
-            method_name,
-            self.load_prod_model_log,
+            "start", self.class_name, method_name, self.load_prod_model_log,
         )
 
         try:
@@ -146,8 +134,7 @@ class Load_Prod_Model:
             metrics_dict = runs_cols.to_dict()
 
             self.log_writer.log(
-                self.load_prod_model_log,
-                log_info="Converted runs cols to dict",
+                self.load_prod_model_log, log_info="Converted runs cols to dict",
             )
 
             """ 
@@ -201,8 +188,7 @@ run_number  metrics.XGBoost0-best_score metrics.RandomForest1-best_score metrics
             top_mn_lst = [mn.split(".")[1].split("-")[0] for mn in best_metrics_names]
 
             self.log_writer.log(
-                self.load_prod_model_log,
-                log_info=f"Got the top model names",
+                self.load_prod_model_log, log_info=f"Got the top model names",
             )
 
             results = self.mlflow_op.search_mlflow_models(order="DESC")
@@ -216,9 +202,9 @@ run_number  metrics.XGBoost0-best_score metrics.RandomForest1-best_score metrics
                 for mv in res.latest_versions:
                     if mv.name in top_mn_lst:
                         self.mlflow_op.transition_mlflow_model(
-                            model_version=mv.version,
-                            stage="Production",
-                            model_name=mv.name,
+                            mv.version,
+                            "Production",
+                            mv.name,
                             self.model_bucket,
                             self.model_bucket,
                         )
@@ -228,18 +214,18 @@ run_number  metrics.XGBoost0-best_score metrics.RandomForest1-best_score metrics
 
                     elif mv.name == "KMeans":
                         self.mlflow_op.transition_mlflow_model(
-                            model_version=mv.version,
-                            stage="Production",
-                            model_name=mv.name,
+                            mv.version,
+                            "Production",
+                            mv.name,
                             self.model_bucket,
                             self.model_bucket,
                         )
 
                     else:
                         self.mlflow_op.transition_mlflow_model(
-                            model_version=mv.version,
-                            stage="Staging",
-                            model_name=mv.name,
+                            mv.version,
+                            "Staging",
+                            mv.name,
                             self.model_bucket,
                             self.model_bucket,
                         )
@@ -250,16 +236,10 @@ run_number  metrics.XGBoost0-best_score metrics.RandomForest1-best_score metrics
             )
 
             self.log_writer.start_log(
-                "exit",
-                self.class_name,
-                method_name,
-                self.load_prod_model_log,
+                "exit", self.class_name, method_name, self.load_prod_model_log,
             )
 
         except Exception as e:
             self.log_writer.exception_log(
-                e,
-                self.class_name,
-                method_name,
-                self.load_prod_model_log,
+                e, self.class_name, method_name, self.load_prod_model_log,
             )

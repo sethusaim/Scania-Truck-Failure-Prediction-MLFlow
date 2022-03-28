@@ -60,7 +60,7 @@ class Prediction:
 
         try:
             self.s3.load_object(
-                object=self.pred_output_file,
+                self.pred_output_file,
                 self.input_files_bucket,
                 log_file,
             )
@@ -194,7 +194,7 @@ class Prediction:
 
             kmeans_model = self.s3.load_model(
                 self.model_bucket,
-                model_name=kmeans_model_name,
+                kmeans_model_name,
                 self.pred_log,
             )
 
@@ -209,8 +209,8 @@ class Prediction:
 
                 cluster_data = cluster_data.drop(["clusters"], axis=1)
 
-                model_name = self.s3.find_correct_model_file(
-                    cluster_number=i,
+                model_name = self.find_correct_model_file(
+                    i,
                     self.model_bucket,
                     self.pred_log,
                 )
@@ -219,7 +219,7 @@ class Prediction:
 
                 model = self.s3.load_model(
                     self.model_bucket,
-                    model_name=prod_model_name,
+                    prod_model_name,
                     self.pred_log,
                 )
 

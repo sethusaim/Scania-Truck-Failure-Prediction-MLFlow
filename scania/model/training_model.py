@@ -114,84 +114,8 @@ class Train_Model:
                     log_info="Seprated cluster features and cluster label for the cluster data",
                 )
 
-                x_train, x_test, y_train, y_test = train_test_split(
-                    cluster_features,
-                    cluster_label,
-                    test_size=self.test_size,
-                    random_state=self.random_state,
-                )
+                
 
-                self.log_writer.log(
-                    self.model_train_log,
-                    log_info=f"Performed train test split with test size as {self.test_size} and random state as {self.random_state}",
-                )
-
-                (
-                    xgb_model,
-                    xgb_model_score,
-                    rf_model,
-                    rf_model_score,
-                ) = self.model_finder.get_trained_models(
-                    x_train, y_train, x_test, y_test
-                )
-
-                self.s3.save_model(
-                    xgb_model,
-                    idx=i,
-                    self.train_model_dir,
-                    model_self.model_bucket,
-                    self.model_train_log,
-                )
-
-                self.s3.save_model(
-                    rf_model,
-                    idx=i,
-                    self.train_model_dir,
-                    model_self.model_bucket,
-                    self.model_train_log,
-                )
-
-                try:
-                    self.mlflow_op.set_mlflow_tracking_uri()
-
-                    self.mlflow_op.set_mlflow_experiment(
-                        experiment_name=self.experiment_name
-                    )
-
-                    with mlflow.start_run(run_name=self.run_name):
-                        self.mlflow_op.log_all_for_model(
-                            idx=None,
-                            kmeans_model,
-                            model_param_name=None,
-                            model_score=None,
-                        )
-
-                        self.mlflow_op.log_all_for_model(
-                            idx=i,
-                            xgb_model,
-                            model_param_name="xgb_model",
-                            model_score=xgb_model_score,
-                        )
-
-                        self.mlflow_op.log_all_for_model(
-                            idx=i,
-                            rf_model,
-                            model_param_name="rf_model",
-                            model_score=rf_model_score,
-                        )
-
-                except Exception as e:
-                    self.log_writer.log(
-                        self.model_train_log,
-                        log_info="Mlflow logging of params,metrics and models failed",
-                    )
-
-                    self.log_writer.exception_log(
-                        e,
-                        self.class_name,
-                        method_name,
-                        self.model_train_log,
-                    )
 
             self.log_writer.log(
                 self.model_train_log, log_info="Successful End of Training",

@@ -437,7 +437,7 @@ class MLFlow_Operation:
             mlflow.sklearn.log_model(
                 sk_model,
                 serialization_format=self.mlflow_save_format,
-                registered_model_name=model_name,
+                registered_model_name,
                 artifact_path=model_name,
             )
 
@@ -580,7 +580,7 @@ class MLFlow_Operation:
             )
 
             if base_model_name is "KMeans":
-                self.log_model(model, model_name=base_model_name)
+                self.log_model(model, base_model_name)
 
             else:
                 model_name = base_model_name + str(idx)
@@ -601,12 +601,12 @@ class MLFlow_Operation:
 
                 for param in model_params_list:
                     self.log_param(
-                        idx=idx, model, model_name=model_name, param=param,
+                        idx=idx, model, model_name, param=param,
                     )
 
-                self.log_model(model, model_name=model_name)
+                self.log_model(model, model_name)
 
-                self.log_metric(model_name=model_name, metric=float(model_score))
+                self.log_metric(model_name, metric=float(model_score))
 
             self.log_writer.start_log(
                 "exit",
@@ -682,7 +682,7 @@ class MLFlow_Operation:
                 )
 
                 client.transition_model_version_stage(
-                    name=model_name, version=current_version, stage=stage
+                    name=model_name, version=current_version, stage
                 )
 
                 self.log_writer.log(
@@ -705,7 +705,7 @@ class MLFlow_Operation:
                 )
 
                 client.transition_model_version_stage(
-                    name=model_name, version=current_version, stage=stage
+                    name=model_name, version=current_version, stage
                 )
 
                 self.log_writer.log(

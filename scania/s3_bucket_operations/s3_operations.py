@@ -116,7 +116,7 @@ class S3_Operation:
                 fname, bucket, log_file
             )
 
-            content = self.read_object(object=txt_obj, log_file)
+            content = self.read_object(txt_obj, log_file)
 
             self.log_writer.log(
                 log_file,
@@ -165,7 +165,7 @@ class S3_Operation:
                 fname, bucket, log_file
             )
 
-            json_content = self.read_object(object=f_obj, log_file)
+            json_content = self.read_object(f_obj, log_file)
 
             dic = json.loads(json_content)
 
@@ -213,7 +213,7 @@ class S3_Operation:
 
         try:
             content = self.read_object(
-                object=object, log_file, make_readable=True
+                object, log_file, make_readable=True
             )
 
             df = pd.read_csv(content)
@@ -260,7 +260,7 @@ class S3_Operation:
                 fname, bucket, log_file,
             )
 
-            df = self.get_df_from_object(object=csv_obj, log_file)
+            df = self.get_df_from_object(csv_obj, log_file)
 
             self.log_writer.log(
                 log_file,
@@ -402,7 +402,7 @@ class S3_Operation:
         )
 
         try:
-            self.load_object(bucket, object=folder_name)
+            self.load_object(bucket, folder_name)
 
             self.log_writer.log(
                 log_file, log_info=f"Folder {folder_name} already exists.",
@@ -423,7 +423,7 @@ class S3_Operation:
                 )
 
                 self.put_object(
-                    object=folder_name, bucket, log_file
+                    folder_name, bucket, log_file
                 )
 
                 self.log_writer.log(
@@ -884,7 +884,7 @@ class S3_Operation:
             )
 
             model_obj = self.read_object(
-                object=f_obj, log_file, decode=False
+                f_obj, log_file, decode=False
             )
 
             model = pickle.loads(model_obj)
