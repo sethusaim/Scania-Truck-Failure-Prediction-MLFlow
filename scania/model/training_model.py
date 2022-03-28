@@ -4,9 +4,8 @@ from scania.data_preprocessing.preprocessing import Preprocessor
 from scania.mlflow_utils.mlflow_operations import MLFlow_Operation
 from scania.model_finder.tuner import Model_Finder
 from scania.s3_bucket_operations.s3_operations import S3_Operation
-
-from utils.model_utils import Model_Utils
 from utils.logger import App_Logger
+from utils.model_utils import Model_Utils
 from utils.read_params import read_params
 
 
@@ -24,23 +23,9 @@ class Train_Model:
 
         self.config = read_params()
 
-        self.model_train_log = self.config["train_db_log"]["model_training"]
+        self.model_train_log = self.config["train_db_log"]["train_model"]
 
-        self.model_bucket = self.config["s3_bucket"]["phising_model"]
-
-        self.test_size = self.config["base"]["test_size"]
-
-        self.target_col = self.config["base"]["target_col"]
-
-        self.random_state = self.config["base"]["random_state"]
-
-        self.remote_server_uri = self.config["mlflow_config"]["remote_server_uri"]
-
-        self.experiment_name = self.config["mlflow_config"]["experiment_name"]
-
-        self.run_name = self.config["mlflow_config"]["run_name"]
-
-        self.train_model_dir = self.config["models_dir"]["trained"]
+        self.target_col = self.config["target_col"]
 
         self.class_name = self.__class__.__name__
 
@@ -72,10 +57,7 @@ class Train_Model:
         method_name = self.training_model.__name__
 
         self.log_writer.start_log(
-            "start",
-            self.class_name,
-            method_name,
-            self.model_train_log,
+            "start", self.class_name, method_name, self.model_train_log,
         )
 
         try:
@@ -111,7 +93,7 @@ class Train_Model:
 
                 self.log_writer.log(
                     self.model_train_log,
-                    log_info="Seprated cluster features and cluster label for the cluster data",
+                    "Seprated cluster features and cluster label for the cluster data",
                 )
 
                 self.model_utils.train_and_log_models(
@@ -123,27 +105,20 @@ class Train_Model:
                 )
 
             self.log_writer.log(
-                self.model_train_log, log_info="Successful End of Training",
+                self.model_train_log, "Successful End of Training",
             )
 
             self.log_writer.start_log(
-                "exit",
-                self.class_name,
-                method_name,
-                self.model_train_log,
+                "exit", self.class_name, method_name, self.model_train_log,
             )
 
             return number_of_clusters
 
         except Exception as e:
             self.log_writer.log(
-                self.model_train_log,
-                log_info="Unsuccessful End of Training",
+                self.model_train_log, "Unsuccessful End of Training",
             )
 
             self.log_writer.exception_log(
-                e,
-                self.class_name,
-                method_name,
-                self.model_train_log,
+                e, self.class_name, method_name, self.model_train_log,
             )

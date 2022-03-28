@@ -91,7 +91,7 @@ class Raw_Train_Data_Validation:
             )
 
             self.log_writer.log(
-                self.train_schema_log, log_info=message,
+                self.train_schema_log, message,
             )
 
             self.log_writer.start_log(
@@ -133,7 +133,7 @@ class Raw_Train_Data_Validation:
             )
 
             self.log_writer.log(
-                self.train_gen_log, log_info=f"Got {regex} pattern",
+                self.train_gen_log, f"Got {regex} pattern",
             )
 
             self.log_writer.start_log(
@@ -213,8 +213,7 @@ class Raw_Train_Data_Validation:
             train_batch_files = [f.split("/")[1] for f in onlyfiles]
 
             self.log_writer.log(
-                self.train_name_valid_log,
-                log_info="Got training files with absolute file name",
+                self.train_name_valid_log, "Got training files with absolute file name",
             )
 
             for fname in train_batch_files:
@@ -226,7 +225,7 @@ class Raw_Train_Data_Validation:
 
                 self.log_writer.log(
                     self.train_name_valid_log,
-                    log_info="Created raw,good and bad data file name",
+                    "Created raw,good and bad data file name",
                 )
 
                 if re.match(regex, fname):
@@ -237,35 +236,35 @@ class Raw_Train_Data_Validation:
                     if len(splitAtDot[1]) == LengthOfDateStampInFile:
                         if len(splitAtDot[2]) == LengthOfTimeStampInFile:
                             self.s3.copy_data(
-                                from_raw_data_train_fname,
+                                raw_data_train_fname,
                                 self.train_data_bucket,
-                                to_good_data_train_fname,
+                                good_data_train_fname,
                                 self.train_data_bucket,
                                 self.train_name_valid_log,
                             )
 
                         else:
                             self.s3.copy_data(
-                                from_raw_data_train_fname,
+                                raw_data_train_fname,
                                 self.train_data_bucket,
-                                to_bad_data_train_fname,
+                                bad_data_train_fname,
                                 self.train_data_bucket,
                                 self.train_name_valid_log,
                             )
 
                     else:
                         self.s3.copy_data(
-                            from_raw_data_train_fname,
+                            raw_data_train_fname,
                             self.train_data_bucket,
-                            to_bad_data_train_fname,
+                            bad_data_train_fname,
                             self.train_data_bucket,
                             self.train_name_valid_log,
                         )
                 else:
                     self.s3.copy_data(
-                        from_raw_data_train_fname,
+                        raw_data_train_fname,
                         self.train_data_bucket,
-                        to_bad_data_train_fname,
+                        bad_data_train_fname,
                         self.train_data_bucket,
                         self.train_name_valid_log,
                     )
@@ -318,9 +317,9 @@ class Raw_Train_Data_Validation:
                         dest_f = self.bad_train_data_dir + "/" + abs_f
 
                         self.s3.move_data(
-                            from_file,
+                            file,
                             self.train_data_bucket,
-                            to_dest_f,
+                            dest_f,
                             self.train_data_bucket,
                             self.train_col_valid_log,
                         )
@@ -378,9 +377,9 @@ class Raw_Train_Data_Validation:
                             dest_f = self.bad_train_data_dir + "/" + abs_f
 
                             self.s3.move_data(
-                                from_file,
+                                file,
                                 self.train_data_bucket,
-                                to_dest_f,
+                                dest_f,
                                 self.train_data_bucket,
                                 self.train_missing_value_log,
                             )
@@ -392,8 +391,8 @@ class Raw_Train_Data_Validation:
 
                         self.s3.upload_df_as_csv(
                             df,
-                            local_abs_f,
-                            bucket_dest_f,
+                            abs_f,
+                            dest_f,
                             self.train_data_bucket,
                             self.train_missing_value_log,
                         )

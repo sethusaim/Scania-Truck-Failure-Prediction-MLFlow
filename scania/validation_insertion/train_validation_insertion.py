@@ -15,7 +15,7 @@ class Train_Validation:
     """
 
     def __init__(self, bucket):
-        self.raw_data = Raw_Train_Data_Validation(raw_data_bucket)
+        self.raw_data = Raw_Train_Data_Validation(bucket)
 
         self.data_transform = Data_Transform_Train()
 
@@ -71,17 +71,17 @@ class Train_Validation:
             self.raw_data.validate_missing_values_in_col()
 
             self.log_writer.log(
-                self.train_main_log, log_info="Raw Data Validation Completed !!",
+                self.train_main_log, "Raw Data Validation Completed !!",
             )
 
             self.log_writer.log(
-                self.train_main_log, log_info="Starting Data Transformation",
+                self.train_main_log, "Starting Data Transformation",
             )
 
             self.data_transform.add_quotes_to_string()
 
             self.log_writer.log(
-                self.train_main_log, log_info="Data Transformation completed !!",
+                self.train_main_log, "Data Transformation completed !!",
             )
 
             self.db_operation.insert_good_data_as_record(
@@ -90,8 +90,7 @@ class Train_Validation:
             )
 
             self.log_writer.log(
-                self.train_main_log,
-                log_info="Data type validation Operation completed !!",
+                self.train_main_log, "Data type validation Operation completed !!",
             )
 
             self.db_operation.export_collection_to_csv(

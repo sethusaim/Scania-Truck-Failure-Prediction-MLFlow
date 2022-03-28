@@ -59,7 +59,7 @@ class Preprocessor:
             self.useful_data = self.data.drop(labels=self.columns, axis=1)
 
             self.log_writer.log(
-                self.log_file, log_info=f"Dropped {columns} from {data}",
+                self.log_file, f"Dropped {columns} from {data}",
             )
 
             self.log_writer.start_log(
@@ -96,7 +96,7 @@ class Preprocessor:
             self.Y = data[label_column_name]
 
             self.log_writer.log(
-                self.log_file, log_info=f"Separated {label_column_name} from {data}",
+                self.log_file, f"Separated {label_column_name} from {data}",
             )
 
             self.log_writer.start_log(
@@ -130,7 +130,7 @@ class Preprocessor:
 
             data.replace(to_replace="'na'", value=np.nan, inplace=True)
 
-            self.log_writer.log(self.log_file, log_info="Replaced " "na" " with np.nan")
+            self.log_writer.log(self.log_file, "Replaced " "na" " with np.nan")
 
             self.log_writer.start_log(
                 "exit", self.class_name, method_name, self.log_file,
@@ -171,7 +171,7 @@ class Preprocessor:
             self.null_counts = data.isna().sum()
 
             self.log_writer.log(
-                self.log_file, log_info=f"Null values count is : {self.null_counts}",
+                self.log_file, f"Null values count is : {self.null_counts}",
             )
 
             for i in range(len(self.null_counts)):
@@ -181,13 +181,13 @@ class Preprocessor:
                     cols_with_missing_values.append(cols[i])
 
             self.log_writer.log(
-                self.log_file, log_info="created cols with missing values",
+                self.log_file, "created cols with missing values",
             )
 
             if null_present:
                 self.log_writer.log(
                     self.log_file,
-                    log_info="null values were found the columns...preparing dataframe with null values",
+                    "null values were found the columns...preparing dataframe with null values",
                 )
 
                 self.dataframe_with_null = pd.DataFrame()
@@ -199,7 +199,7 @@ class Preprocessor:
                 )
 
                 self.log_writer.log(
-                    self.log_file, log_info="Created dataframe with null values",
+                    self.log_file, "Created dataframe with null values",
                 )
 
                 self.s3.upload_df_as_csv(
@@ -213,7 +213,7 @@ class Preprocessor:
             else:
                 self.log_writer.log(
                     self.log_file,
-                    log_info="No null values are present in cols. Skipped the creation of dataframe",
+                    "No null values are present in cols. Skipped the creation of dataframe",
                 )
 
             self.log_writer.start_log(
@@ -248,7 +248,7 @@ class Preprocessor:
             data["class"] = data["class"].map({"'neg'": 0, "'pos'": 1})
 
             self.log_writer.log(
-                self.log_file, log_info="Encoded target cols in dataframe",
+                self.log_file, "Encoded target cols in dataframe",
             )
 
             self.log_writer.start_log(
@@ -322,20 +322,19 @@ class Preprocessor:
 
             self.log_writer.log(
                 self.log_file,
-                log_info=f"Initialized {pca_model_name} model with n_components to {self.n_components}",
+                f"Initialized {pca_model_name} model with n_components to {self.n_components}",
             )
 
             new_data = pca.fit_transform(X_scaled_data)
 
             self.log_writer.log(
-                self.log_file,
-                log_info=f"Transformed the data using {pca_model_name} model",
+                self.log_file, f"Transformed the data using {pca_model_name} model",
             )
 
             principal_x = pd.DataFrame(new_data, index=self.data.index)
 
             self.log_writer.log(
-                self.log_file, log_info="Created a dataframe for the transformed data",
+                self.log_file, "Created a dataframe for the transformed data",
             )
 
             self.log_writer.start_log(
@@ -372,14 +371,14 @@ class Preprocessor:
             self.scaler = StandardScaler()
 
             self.log_writer.log(
-                self.log_file, log_info=f"Initialized {self.scaler.__class__.__name__}",
+                self.log_file, f"Initialized {self.scaler.__class__.__name__}",
             )
 
             self.scaled_data = self.scaler.fit_transform(self.data)
 
             self.log_writer.log(
                 self.log_file,
-                log_info=f"Transformed data using {self.scaler.__class__.__name__}",
+                f"Transformed data using {self.scaler.__class__.__name__}",
             )
 
             self.scaled_num_df = pd.DataFrame(
@@ -387,7 +386,7 @@ class Preprocessor:
             )
 
             self.log_writer.log(
-                self.log_file, log_info="Converted transformed data to dataframe",
+                self.log_file, "Converted transformed data to dataframe",
             )
 
             self.log_writer.start_log(
@@ -424,7 +423,7 @@ class Preprocessor:
             cols_to_drop = [x for x in data.columns if data_n[x]["std"] == 0]
 
             self.log_writer.log(
-                self.log_file, log_info="Got cols with zero standard deviation",
+                self.log_file, "Got cols with zero standard deviation",
             )
 
             self.log_writer.start_log(

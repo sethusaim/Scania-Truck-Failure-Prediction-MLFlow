@@ -66,7 +66,7 @@ class MLFlow_Operation:
 
             self.log_writer.log(
                 self.log_file,
-                log_info=f"Got {exp_name} experiment from mlflow",
+                f"Got {exp_name} experiment from mlflow",
             )
 
             self.log_writer.start_log(
@@ -112,7 +112,7 @@ class MLFlow_Operation:
 
             self.log_writer.log(
                 self.log_file,
-                log_info=f"Completed searching for runs in mlflow with experiment ids as {exp_id}",
+                f"Completed searching for runs in mlflow with experiment ids as {exp_id}",
             )
 
             self.log_writer.start_log(
@@ -158,7 +158,7 @@ class MLFlow_Operation:
 
             self.log_writer.log(
                 self.log_file,
-                log_info=f"Set mlflow experiment with name as {experiment_name}",
+                f"Set mlflow experiment with name as {experiment_name}",
             )
 
             self.log_writer.start_log(
@@ -202,7 +202,7 @@ class MLFlow_Operation:
 
             self.log_writer.log(
                 self.log_file,
-                log_info="Got mlflow client with tracking uri",
+                "Got mlflow client with tracking uri",
             )
 
             self.log_writer.start_log(
@@ -247,7 +247,7 @@ class MLFlow_Operation:
             remote_server_uri = os.environ["MLFLOW_TRACKING_URI"]
 
             self.log_writer.log(
-                self.log_file, log_info="Got mlflow tracking uri",
+                self.log_file, "Got mlflow tracking uri",
             )
 
             self.log_writer.start_log(
@@ -294,7 +294,7 @@ class MLFlow_Operation:
             mlflow.set_tracking_uri(server_uri)
 
             self.log_writer.log(
-                self.log_file, log_info="Set mlflow tracking uri",
+                self.log_file, "Set mlflow tracking uri",
             )
 
             self.log_writer.start_log(
@@ -342,7 +342,7 @@ class MLFlow_Operation:
 
             self.log_writer.log(
                 self.log_file,
-                log_info="Got registered models from mlflow",
+                "Got registered models from mlflow",
             )
 
             self.log_writer.start_log(
@@ -392,7 +392,7 @@ class MLFlow_Operation:
 
             self.log_writer.log(
                 self.log_file,
-                log_info=f"Got registered models in mlflow in {order} order",
+                f"Got registered models in mlflow in {order} order",
             )
 
             self.log_writer.start_log(
@@ -443,7 +443,7 @@ class MLFlow_Operation:
 
             self.log_writer.log(
                 self.log_file,
-                log_info=f"Logged {model_name} model in mlflow",
+                f"Logged {model_name} model in mlflow",
             )
 
             self.log_writer.start_log(
@@ -489,7 +489,7 @@ class MLFlow_Operation:
 
             self.log_writer.log(
                 self.log_file,
-                log_info=f"{model_score_name} logged in mlflow",
+                f"{model_score_name} logged in mlflow",
             )
 
             self.log_writer.start_log(
@@ -535,7 +535,7 @@ class MLFlow_Operation:
 
             self.log_writer.log(
                 self.log_file,
-                log_info=f"{model_param_name} logged in mlflow",
+                f"{model_param_name} logged in mlflow",
             )
 
             self.log_writer.start_log(
@@ -587,7 +587,7 @@ class MLFlow_Operation:
 
                 self.log_writer.log(
                     self.log_file,
-                    log_info=f"Got the model name as {model_name}",
+                    f"Got the model name as {model_name}",
                 )
 
                 model_params_list = list(
@@ -596,7 +596,7 @@ class MLFlow_Operation:
 
                 self.log_writer.log(
                     self.log_file,
-                    log_info=f"Created a list of params based on {model_param_name}",
+                    f"Created a list of params based on {model_param_name}",
                 )
 
                 for param in model_params_list:
@@ -653,7 +653,7 @@ class MLFlow_Operation:
 
             self.log_writer.log(
                 self.log_file,
-                log_info=f"Got {current_version} as the current model version",
+                f"Got {current_version} as the current model version",
             )
 
             client = self.get_mlflow_client(server_uri=remote_server_uri)
@@ -672,13 +672,13 @@ class MLFlow_Operation:
 
             self.log_writer.log(
                 self.log_file,
-                log_info="Created trained,stag and prod model files",
+                "Created trained,stag and prod model files",
             )
 
             if stage == "Production":
                 self.log_writer.log(
                     self.log_file,
-                    log_info=f"{stage} is selected for transition",
+                    f"{stage} is selected for transition",
                 )
 
                 client.transition_model_version_stage(
@@ -687,7 +687,7 @@ class MLFlow_Operation:
 
                 self.log_writer.log(
                     self.log_file,
-                    log_info=f"Transitioned {model_name} to {stage} in mlflow",
+                    f"Transitioned {model_name} to {stage} in mlflow",
                 )
 
                 self.s3.copy_data(
@@ -701,7 +701,7 @@ class MLFlow_Operation:
             elif stage == "Staging":
                 self.log_writer.log(
                     self.log_file,
-                    log_info=f"{stage} is selected for transition",
+                    f"{stage} is selected for transition",
                 )
 
                 client.transition_model_version_stage(
@@ -710,7 +710,7 @@ class MLFlow_Operation:
 
                 self.log_writer.log(
                     self.log_file,
-                    log_info=f"Transitioned {model_name} to {stage} in mlflow",
+                    f"Transitioned {model_name} to {stage} in mlflow",
                 )
 
                 self.s3.copy_data(
@@ -724,7 +724,7 @@ class MLFlow_Operation:
             else:
                 self.log_writer.log(
                     self.log_file,
-                    log_info="Please select stage for model transition",
+                    "Please select stage for model transition",
                 )
 
             self.log_writer.start_log(

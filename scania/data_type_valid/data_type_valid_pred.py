@@ -77,7 +77,7 @@ class DB_Operation_Pred:
 
                 self.log_writer.log(
                     self.pred_db_insert_log,
-                    log_info="Inserted dataframe as collection record in mongodb",
+                    "Inserted dataframe as collection record in mongodb",
                 )
 
             self.log_writer.start_log(

@@ -83,8 +83,7 @@ class KMeans_Clustering:
             plt.savefig(self.elbow_plot_file)
 
             self.log_writer.log(
-                self.log_file,
-                log_info="Saved elbow_plot fig and local copy is created",
+                self.log_file, "Saved elbow_plot fig and local copy is created",
             )
 
             self.s3.upload_file(
@@ -103,7 +102,7 @@ class KMeans_Clustering:
 
             self.log_writer.log(
                 self.log_file,
-                log_info=f"The optimum number of clusters is {str(self.kn.knee)}.",
+                f"The optimum number of clusters is {str(self.kn.knee)}.",
             )
 
             self.log_writer.start_log(
@@ -152,8 +151,7 @@ class KMeans_Clustering:
             self.data["Cluster"] = self.y_kmeans
 
             self.log_writer.log(
-                self.log_file,
-                log_info=f"Successfully created {str(self.kn.knee)} clusters",
+                self.log_file, f"Successfully created {str(self.kn.knee)} clusters",
             )
 
             self.log_writer.start_log(

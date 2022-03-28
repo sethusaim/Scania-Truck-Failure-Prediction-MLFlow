@@ -80,7 +80,7 @@ class DB_Operation_Train:
 
                 self.log_writer.log(
                     self.train_db_insert_log,
-                    log_info="Inserted dataframe as collection record in mongodb",
+                    "Inserted dataframe as collection record in mongodb",
                 )
 
             self.log_writer.start_log(

@@ -91,7 +91,7 @@ class Raw_Pred_Data_Validation:
             )
 
             self.log_writer.log(
-                self.pred_schema_log, log_info=message,
+                self.pred_schema_log, message,
             )
 
             self.log_writer.start_log(
@@ -133,7 +133,7 @@ class Raw_Pred_Data_Validation:
             )
 
             self.log_writer.log(
-                self.pred_gen_log, log_info=f"Got {regex} pattern",
+                self.pred_gen_log, f"Got {regex} pattern",
             )
 
             self.log_writer.start_log(
@@ -212,7 +212,7 @@ class Raw_Pred_Data_Validation:
 
             self.log_writer.log(
                 self.pred_name_valid_log,
-                log_info="Got Prediction files with absolute file name",
+                "Got Prediction files with absolute file name",
             )
 
             for fname in pred_batch_files:
@@ -223,8 +223,7 @@ class Raw_Pred_Data_Validation:
                 bad_data_pred_fname = self.bad_pred_data_dir + "/" + fname
 
                 self.log_writer.log(
-                    self.pred_name_valid_log,
-                    log_info="Created raw,good and bad data file name",
+                    self.pred_name_valid_log, "Created raw,good and bad data file name",
                 )
 
                 if re.match(regex, fname):
@@ -235,35 +234,35 @@ class Raw_Pred_Data_Validation:
                     if len(splitAtDot[1]) == LengthOfDateStampInFile:
                         if len(splitAtDot[2]) == LengthOfTimeStampInFile:
                             self.s3.copy_data(
-                                from_raw_data_pred_fname,
+                                raw_data_pred_fname,
                                 self.pred_data_bucket,
-                                to_good_data_pred_fname,
+                                good_data_pred_fname,
                                 self.pred_data_bucket,
                                 self.pred_name_valid_log,
                             )
 
                         else:
                             self.s3.copy_data(
-                                from_raw_data_pred_fname,
+                                raw_data_pred_fname,
                                 self.pred_data_bucket,
-                                to_bad_data_pred_fname,
+                                bad_data_pred_fname,
                                 self.pred_data_bucket,
                                 self.pred_name_valid_log,
                             )
 
                     else:
                         self.s3.copy_data(
-                            from_raw_data_pred_fname,
+                            raw_data_pred_fname,
                             self.pred_data_bucket,
-                            to_bad_data_pred_fname,
+                            bad_data_pred_fname,
                             self.pred_data_bucket,
                             self.pred_name_valid_log,
                         )
                 else:
                     self.s3.copy_data(
-                        from_raw_data_pred_fname,
+                        raw_data_pred_fname,
                         self.pred_data_bucket,
-                        to_bad_data_pred_fname,
+                        bad_data_pred_fname,
                         self.pred_data_bucket,
                         self.pred_name_valid_log,
                     )
@@ -314,9 +313,9 @@ class Raw_Pred_Data_Validation:
                         dest_f = self.bad_pred_data_dir + "/" + abs_f
 
                         self.s3.move_data(
-                            from_file,
+                            file,
                             self.pred_data_bucket,
-                            to_dest_f,
+                            dest_f,
                             self.pred_data_bucket,
                             self.pred_col_valid_log,
                         )
@@ -374,9 +373,9 @@ class Raw_Pred_Data_Validation:
                             dest_f = self.bad_pred_data_dir + "/" + abs_f
 
                             self.s3.move_data(
-                                from_file,
+                                file,
                                 self.pred_data_bucket,
-                                to_dest_f,
+                                dest_f,
                                 self.pred_data_bucket,
                                 self.pred_missing_value_log,
                             )
@@ -388,8 +387,8 @@ class Raw_Pred_Data_Validation:
 
                         self.s3.upload_df_as_csv(
                             df,
-                            local_abs_f,
-                            bucket_dest_f,
+                            abs_f,
+                            dest_f,
                             self.pred_data_bucket,
                             self.pred_missing_value_log,
                         )

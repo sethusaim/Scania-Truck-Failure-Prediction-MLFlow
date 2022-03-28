@@ -68,8 +68,7 @@ class Data_Transform_Pred:
                         df[column] = df[column].replace("na", "'na'")
 
                 self.log_writer.log(
-                    self.pred_data_transform_log,
-                    log_info=f"Quotes added for the file {file}",
+                    self.pred_data_transform_log, f"Quotes added for the file {file}",
                 )
 
                 self.s3.upload_df_as_csv(
