@@ -11,10 +11,10 @@ class Data_Getter_Train:
     Revisions   :   Moved to setup to cloud 
     """
 
-    def __init__(self, table_name):
+    def __init__(self, log_file):
         self.config = read_params()
 
-        self.table_name = table_name
+        self.log_file = log_file
 
         self.train_csv_file = self.config["export_csv_file"]["train"]
 
@@ -40,32 +40,21 @@ class Data_Getter_Train:
         method_name = self.get_data.__name__
 
         self.log_writer.start_log(
-            key="start",
-            class_name=self.class_name,
-            method_name=method_name,
-            table_name=self.table_name,
+            "start", self.class_name, method_name, self.log_file,
         )
 
         try:
             df = self.s3.read_csv(
-                file_name=self.train_csv_file,
-                bucket=self.input_files_bucket,
-                table_name=self.table_name,
+                self.train_csv_file, self.input_files_bucket, self.log_file,
             )
 
             self.log_writer.start_log(
-                key="exit",
-                class_name=self.class_name,
-                method_name=method_name,
-                table_name=self.table_name,
+                "exit", self.class_name, method_name, self.log_file,
             )
 
             return df
 
         except Exception as e:
             self.log_writer.exception_log(
-                error=e,
-                class_name=self.class_name,
-                method_name=method_name,
-                table_name=self.table_name,
+                e, self.class_name, method_name, self.log_file,
             )

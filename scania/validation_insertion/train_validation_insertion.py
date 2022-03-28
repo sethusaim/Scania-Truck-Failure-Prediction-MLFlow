@@ -15,7 +15,7 @@ class Train_Validation:
     """
 
     def __init__(self, bucket):
-        self.raw_data = Raw_Train_Data_Validation(raw_data_bucket=bucket)
+        self.raw_data = Raw_Train_Data_Validation(raw_data_bucket)
 
         self.data_transform = Data_Transform_Train()
 
@@ -50,10 +50,7 @@ class Train_Validation:
 
         try:
             self.log_writer.start_log(
-                key="start",
-                class_name=self.class_name,
-                method_name=method_name,
-                table_name=self.train_main_log,
+                "start", self.class_name, method_name, self.train_main_log,
             )
 
             (
@@ -65,7 +62,7 @@ class Train_Validation:
 
             regex = self.raw_data.get_regex_pattern()
 
-            self.raw_data.validate_raw_file_name(
+            self.raw_data.validate_raw_fname(
                 regex, LengthOfDateStampInFile, LengthOfTimeStampInFile
             )
 
@@ -74,19 +71,17 @@ class Train_Validation:
             self.raw_data.validate_missing_values_in_col()
 
             self.log_writer.log(
-                table_name=self.train_main_log,
-                log_info="Raw Data Validation Completed !!",
+                self.train_main_log, log_info="Raw Data Validation Completed !!",
             )
 
             self.log_writer.log(
-                table_name=self.train_main_log, log_info="Starting Data Transformation",
+                self.train_main_log, log_info="Starting Data Transformation",
             )
 
             self.data_transform.add_quotes_to_string()
 
             self.log_writer.log(
-                table_name=self.train_main_log,
-                log_info="Data Transformation completed !!",
+                self.train_main_log, log_info="Data Transformation completed !!",
             )
 
             self.db_operation.insert_good_data_as_record(
@@ -95,7 +90,7 @@ class Train_Validation:
             )
 
             self.log_writer.log(
-                table_name=self.train_main_log,
+                self.train_main_log,
                 log_info="Data type validation Operation completed !!",
             )
 
@@ -105,16 +100,10 @@ class Train_Validation:
             )
 
             self.log_writer.start_log(
-                key="exit",
-                class_name=self.class_name,
-                method_name=method_name,
-                table_name=self.train_main_log,
+                "exit", self.class_name, method_name, self.train_main_log,
             )
 
         except Exception as e:
             self.log_writer.exception_log(
-                error=e,
-                class_name=self.class_name,
-                method_name=method_name,
-                table_name=self.train_main_log,
+                e, self.class_name, method_name, self.train_main_log,
             )

@@ -12,8 +12,8 @@ class Model_Finder:
     Revisions   :   moved to setup to cloud
     """
 
-    def __init__(self, table_name):
-        self.table_name = table_name
+    def __init__(self, log_file):
+        self.log_file = log_file
 
         self.class_name = self.__class__.__name__
 
@@ -42,23 +42,23 @@ class Model_Finder:
         method_name = self.get_best_model_for_adaboost.__name__
 
         self.log_writer.start_log(
-            key="start",
-            class_name=self.class_name,
-            method_name=method_name,
-            table_name=self.table_name,
+            "start",
+            self.class_name,
+            method_name,
+            self.log_file,
         )
 
         try:
             self.ada_model_name = self.model_utils.get_model_name(
-                model=self.ada_model, table_name=self.table_name
+                self.ada_model, self.log_file
             )
 
             self.adaboost_best_params = self.model_utils.get_model_params(
-                model=self.ada_model,
+                self.ada_model,
                 model_key_name="adaboost_model",
                 x_train=train_x,
                 y_train=train_y,
-                table_name=self.table_name,
+                self.log_file,
             )
 
             self.n_estimators = self.adaboost_best_params["n_estimators"]
@@ -68,7 +68,7 @@ class Model_Finder:
             self.random_state = self.adaboost_best_params["random_state"]
 
             self.log_writer.log(
-                table_name=self.table_name,
+                self.log_file,
                 log_info=f"{self.ada_model_name} model best params are {self.adaboost_best_params}",
             )
 
@@ -79,32 +79,32 @@ class Model_Finder:
             )
 
             self.log_writer.log(
-                table_name=self.table_name,
+                self.log_file,
                 log_info=f"Initialized {self.ada_model_name} with {self.adaboost_best_params} as params",
             )
 
             self.ada_model.fit(train_x, train_y)
 
             self.log_writer.log(
-                table_name=self.table_name,
+                self.log_file,
                 log_info=f"Created {self.ada_model_name} based on the {self.adaboost_best_params} as params",
             )
 
             self.log_writer.start_log(
-                key="exit",
-                class_name=self.class_name,
-                method_name=method_name,
-                table_name=self.table_name,
+                "exit",
+                self.class_name,
+                method_name,
+                self.log_file,
             )
 
             return self.ada_model
 
         except Exception as e:
             self.log_writer.exception_log(
-                error=e,
-                class_name=self.class_name,
-                method_name=method_name,
-                table_name=self.table_name,
+                e,
+                self.class_name,
+                method_name,
+                self.log_file,
             )
 
     def get_best_model_for_rf(self, train_x, train_y):
@@ -123,23 +123,23 @@ class Model_Finder:
         method_name = self.get_best_model_for_rf.__name__
 
         self.log_writer.start_log(
-            key="start",
-            class_name=self.class_name,
-            method_name=method_name,
-            table_name=self.table_name,
+            "start",
+            self.class_name,
+            method_name,
+            self.log_file,
         )
 
         try:
             self.rf_model_name = self.model_utils.get_model_name(
-                model=self.rf_model, table_name=self.table_name
+                self.rf_model, self.log_file
             )
 
             self.rf_best_params = self.model_utils.get_model_params(
-                model=self.rf_model,
+                self.rf_model,
                 model_key_name="rf_model",
                 x_train=train_x,
                 y_train=train_y,
-                table_name=self.table_name,
+                self.log_file,
             )
 
             self.criterion = self.rf_best_params["criterion"]
@@ -151,7 +151,7 @@ class Model_Finder:
             self.n_estimators = self.rf_best_params["n_estimators"]
 
             self.log_writer.log(
-                table_name=self.table_name,
+                self.log_file,
                 log_info=f"{self.rf_model_name} model best params are {self.rf_best_params}",
             )
 
@@ -163,32 +163,32 @@ class Model_Finder:
             )
 
             self.log_writer.log(
-                table_name=self.table_name,
+                self.log_file,
                 log_info=f"Initialized {self.rf_model_name} with {self.rf_best_params} as params",
             )
 
             self.rf_model.fit(train_x, train_y)
 
             self.log_writer.log(
-                table_name=self.table_name,
+                self.log_file,
                 log_info=f"Created {self.rf_model_name} based on the {self.rf_best_params} as params",
             )
 
             self.log_writer.start_log(
-                key="exit",
-                class_name=self.class_name,
-                method_name=method_name,
-                table_name=self.table_name,
+                "exit",
+                self.class_name,
+                method_name,
+                self.log_file,
             )
 
             return self.rf_model
 
         except Exception as e:
             self.log_writer.exception_log(
-                error=e,
-                class_name=self.class_name,
-                method_name=method_name,
-                table_name=self.table_name,
+                e,
+                self.class_name,
+                method_name,
+                self.log_file,
             )
 
     def get_trained_models(self, train_x, train_y, test_x, test_y):
@@ -205,10 +205,10 @@ class Model_Finder:
         method_name = self.get_trained_models.__name__
 
         self.log_writer.start_log(
-            key="start",
-            class_name=self.class_name,
-            method_name=method_name,
-            table_name=self.table_name,
+            "start",
+            self.class_name,
+            method_name,
+            self.log_file,
         )
 
         try:
@@ -217,26 +217,26 @@ class Model_Finder:
             )
 
             ada_model_score = self.model_utilsget_model_score(
-                model=ada_model,
+                ada_model,
                 test_x=test_x,
                 test_y=test_y,
-                table_name=self.table_name,
+                self.log_file,
             )
 
             rf_model = self.get_best_model_for_rf(train_x=train_x, train_y=train_y)
 
             rf_model_score = self.model_utils.get_model_score(
-                model=rf_model,
+                rf_model,
                 test_x=test_x,
                 test_y=test_y,
-                table_name=self.table_name,
+                self.log_file,
             )
 
             self.log_writer.start_log(
-                key="exit",
-                class_name=self.class_name,
-                method_name=method_name,
-                table_name=self.table_name,
+                "exit",
+                self.class_name,
+                method_name,
+                self.log_file,
             )
 
             return (
@@ -248,8 +248,8 @@ class Model_Finder:
 
         except Exception as e:
             self.log_writer.exception_log(
-                error=e,
-                class_name=self.class_name,
-                method_name=method_name,
-                table_name=self.table_name,
+                e,
+                self.class_name,
+                method_name,
+                self.log_file,
             )

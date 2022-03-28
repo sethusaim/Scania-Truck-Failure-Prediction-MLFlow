@@ -41,17 +41,17 @@ class Data_Transform_Pred:
         method_name = self.add_quotes_to_string.__name__
 
         self.log_writer.start_log(
-            key="start",
-            class_name=self.class_name,
-            method_name=method_name,
-            table_name=self.pred_data_transform_log,
+            "start",
+            self.class_name,
+            method_name,
+            self.pred_data_transform_log,
         )
 
         try:
             lst = self.s3.read_csv(
-                bucket=self.pred_data_bucket,
-                file_name=self.good_pred_data_dir,
-                table_name=self.pred_data_transform_log,
+                self.pred_data_bucket,
+                self.good_pred_data_dir,
+                self.pred_data_transform_log,
                 folder=True,
             )
 
@@ -71,29 +71,29 @@ class Data_Transform_Pred:
                         df[column] = df[column].replace("na", "'na'")
 
                 self.log_writer.log(
-                    table_name=self.pred_data_transform_log,
+                    self.pred_data_transform_log,
                     log_info=f"Quotes added for the file {file}",
                 )
 
                 self.s3.upload_df_as_csv(
-                    data_frame=df,
-                    file_name=abs_f,
-                    bucket=self.pred_data_bucket,
-                    dest_file_name=file,
-                    table_name=self.pred_data_transform_log,
+                    df,
+                    abs_f,
+                    self.pred_data_bucket,
+                    dest_file,
+                    self.pred_data_transform_log,
                 )
 
             self.log_writer.start_log(
-                key="exit",
-                class_name=self.class_name,
-                method_name=method_name,
-                table_name=self.pred_data_transform_log,
+                "exit",
+                self.class_name,
+                method_name,
+                self.pred_data_transform_log,
             )
 
         except Exception as e:
             self.log_writer.exception_log(
-                error=e,
-                class_name=self.class_name,
-                method_name=method_name,
-                table_name=self.pred_data_transform_log,
+                e,
+                self.class_name,
+                method_name,
+                self.pred_data_transform_log,
             )

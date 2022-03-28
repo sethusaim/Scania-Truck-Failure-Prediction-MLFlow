@@ -15,14 +15,14 @@ class Preprocessor:
     Revisions   :   moved setup to cloud
     """
 
-    def __init__(self, table_name):
+    def __init__(self, log_file):
         self.log_writer = App_Logger()
 
         self.config = read_params()
 
         self.class_name = self.__class__.__name__
 
-        self.table_name = table_name
+        self.log_file = log_file
 
         self.null_values_file = self.config["null_values_csv_file"]
 
@@ -48,10 +48,10 @@ class Preprocessor:
         method_name = self.remove_columns.__name__
 
         self.log_writer.start_log(
-            key="start",
-            class_name=self.class_name,
-            method_name=method_name,
-            table_name=self.table_name,
+            "start",
+            self.class_name,
+            method_name,
+            self.log_file,
         )
 
         self.data = data
@@ -62,24 +62,24 @@ class Preprocessor:
             self.useful_data = self.data.drop(labels=self.columns, axis=1)
 
             self.log_writer.log(
-                table_name=self.table_name, log_info=f"Dropped {columns} from {data}",
+                self.log_file, log_info=f"Dropped {columns} from {data}",
             )
 
             self.log_writer.start_log(
-                key="exit",
-                class_name=self.class_name,
-                method_name=method_name,
-                table_name=self.table_name,
+                "exit",
+                self.class_name,
+                method_name,
+                self.log_file,
             )
 
             return self.useful_data
 
         except Exception as e:
             self.log_writer.exception_log(
-                error=e,
-                class_name=self.class_name,
-                method_name=method_name,
-                table_name=self.table_name,
+                e,
+                self.class_name,
+                method_name,
+                self.log_file,
             )
 
     def separate_label_feature(self, data, label_column_name):
@@ -96,10 +96,10 @@ class Preprocessor:
         method_name = self.separate_label_feature.__name__
 
         self.log_writer.start_log(
-            key="start",
-            class_name=self.class_name,
-            method_name=method_name,
-            table_name=self.table_name,
+            "start",
+            self.class_name,
+            method_name,
+            self.log_file,
         )
 
         try:
@@ -108,25 +108,25 @@ class Preprocessor:
             self.Y = data[label_column_name]
 
             self.log_writer.log(
-                table_name=self.table_name,
+                self.log_file,
                 log_info=f"Separated {label_column_name} from {data}",
             )
 
             self.log_writer.start_log(
-                key="exit",
-                class_name=self.class_name,
-                method_name=method_name,
-                table_name=self.table_name,
+                "exit",
+                self.class_name,
+                method_name,
+                self.log_file,
             )
 
             return self.X, self.Y
 
         except Exception as e:
             self.log_writer.exception_log(
-                error=e,
-                class_name=self.class_name,
-                method_name=method_name,
-                table_name=self.table_name,
+                e,
+                self.class_name,
+                method_name,
+                self.log_file,
             )
 
     def replace_invalid_values(self, data):
@@ -144,33 +144,33 @@ class Preprocessor:
 
         try:
             self.log_writer.start_log(
-                key="start",
-                class_name=self.class_name,
-                method_name=method_name,
-                table_name=self.table_name,
+                "start",
+                self.class_name,
+                method_name,
+                self.log_file,
             )
 
             data.replace(to_replace="'na'", value=np.nan, inplace=True)
 
             self.log_writer.log(
-                table_name=self.table_name, log_info="Replaced " "na" " with np.nan"
+                self.log_file, log_info="Replaced " "na" " with np.nan"
             )
 
             self.log_writer.start_log(
-                key="exit",
-                class_name=self.class_name,
-                method_name=method_name,
-                table_name=self.table_name,
+                "exit",
+                self.class_name,
+                method_name,
+                self.log_file,
             )
 
             return data
 
         except Exception as e:
             self.log_writer.exception_log(
-                error=e,
-                class_name=self.class_name,
-                method_name=method_name,
-                table_name=self.table_name,
+                e,
+                self.class_name,
+                method_name,
+                self.log_file,
             )
 
     def is_null_present(self, data):
@@ -188,10 +188,10 @@ class Preprocessor:
         method_name = self.is_null_present.__name__
 
         self.log_writer.start_log(
-            key="start",
-            class_name=self.class_name,
-            method_name=method_name,
-            table_name=self.table_name,
+            "start",
+            self.class_name,
+            method_name,
+            self.log_file,
         )
 
         null_present = False
@@ -204,7 +204,7 @@ class Preprocessor:
             self.null_counts = data.isna().sum()
 
             self.log_writer.log(
-                table_name=self.table_name,
+                self.log_file,
                 log_info=f"Null values count is : {self.null_counts}",
             )
 
@@ -215,12 +215,12 @@ class Preprocessor:
                     cols_with_missing_values.append(cols[i])
 
             self.log_writer.log(
-                table_name=self.table_name, log_info="created cols with missing values",
+                self.log_file, log_info="created cols with missing values",
             )
 
             if null_present:
                 self.log_writer.log(
-                    table_name=self.table_name,
+                    self.log_file,
                     log_info="null values were found the columns...preparing dataframe with null values",
                 )
 
@@ -233,39 +233,39 @@ class Preprocessor:
                 )
 
                 self.log_writer.log(
-                    table_name=self.table_name,
+                    self.log_file,
                     log_info="Created dataframe with null values",
                 )
 
                 self.s3.upload_df_as_csv(
-                    data_frame=self.dataframe_with_null,
-                    file_name=self.null_values_file,
-                    bucket=self.input_files_bucket,
-                    dest_file_name=self.null_values_file,
-                    table_name=self.table_name,
+                    self.dataframe_with_null,
+                    self.null_values_file,
+                    self.input_files_bucket,
+                    self.null_values_file,
+                    self.log_file,
                 )
 
             else:
                 self.log_writer.log(
-                    table_name=self.table_name,
+                    self.log_file,
                     log_info="No null values are present in cols. Skipped the creation of dataframe",
                 )
 
             self.log_writer.start_log(
-                key="exit",
-                class_name=self.class_name,
-                method_name=method_name,
-                table_name=self.table_name,
+                "exit",
+                self.class_name,
+                method_name,
+                self.log_file,
             )
 
             return null_present
 
         except Exception as e:
             self.log_writer.exception_log(
-                error=e,
-                class_name=self.class_name,
-                method_name=method_name,
-                table_name=self.table_name,
+                e,
+                self.class_name,
+                method_name,
+                self.log_file,
             )
 
     def encode_target_cols(self, data):
@@ -283,33 +283,33 @@ class Preprocessor:
 
         try:
             self.log_writer.start_log(
-                key="start",
-                class_name=self.class_name,
-                method_name=method_name,
-                table_name=self.table_name,
+                "start",
+                self.class_name,
+                method_name,
+                self.log_file,
             )
 
             data["class"] = data["class"].map({"'neg'": 0, "'pos'": 1})
 
             self.log_writer.log(
-                table_name=self.table_name, log_info="Encoded target cols in dataframe",
+                self.log_file, log_info="Encoded target cols in dataframe",
             )
 
             self.log_writer.start_log(
-                key="exit",
-                class_name=self.class_name,
-                method_name=method_name,
-                table_name=self.table_name,
+                "exit",
+                self.class_name,
+                method_name,
+                self.log_file,
             )
 
             return data
 
         except Exception as e:
             self.log_writer.exception_log(
-                error=e,
-                class_name=self.class_name,
-                method_name=method_name,
-                table_name=self.table_name,
+                e,
+                self.class_name,
+                method_name,
+                self.log_file,
             )
 
     def impute_missing_values(self, data):
@@ -327,10 +327,10 @@ class Preprocessor:
 
         try:
             self.log_writer.start_log(
-                key="start",
-                class_name=self.class_name,
-                method_name=method_name,
-                table_name=self.table_name,
+                "start",
+                self.class_name,
+                method_name,
+                self.log_file,
             )
 
             data = data[data.columns[data.isnull().mean() < 0.6]]
@@ -341,20 +341,20 @@ class Preprocessor:
                 data[col] = data[col].replace(np.NaN, data[col].mean(), inplace=True)
 
             self.log_writer.start_log(
-                key="exit",
-                class_name=self.class_name,
-                method_name=method_name,
-                table_name=self.table_name,
+                "exit",
+                self.class_name,
+                method_name,
+                self.log_file,
             )
 
             return data
 
         except Exception as e:
             self.log_writer.exception_log(
-                error=e,
-                class_name=self.class_name,
-                method_name=method_name,
-                table_name=self.table_name,
+                e,
+                self.class_name,
+                method_name,
+                self.log_file,
             )
 
     def apply_pca_transform(self, X_scaled_data):
@@ -372,52 +372,52 @@ class Preprocessor:
 
         try:
             self.log_writer.start_log(
-                key="start",
-                class_name=self.class_name,
-                method_name=method_name,
-                table_name=self.table_name,
+                "start",
+                self.class_name,
+                method_name,
+                self.log_file,
             )
 
             pca = PCA(n_components=self.n_components)
 
             pca_model_name = self.model_utils.get_model_name(
-                model=pca, table_name=self.table_name
+                pca, self.log_file
             )
 
             self.log_writer.log(
-                table_name=self.table_name,
+                self.log_file,
                 log_info=f"Initialized {pca_model_name} model with n_components to {self.n_components}",
             )
 
             new_data = pca.fit_transform(X_scaled_data)
 
             self.log_writer.log(
-                table_name=self.table_name,
+                self.log_file,
                 log_info=f"Transformed the data using {pca_model_name} model",
             )
 
             principal_x = pd.DataFrame(new_data, index=self.data.index)
 
             self.log_writer.log(
-                table_name=self.table_name,
+                self.log_file,
                 log_info="Created a dataframe for the transformed data",
             )
 
             self.log_writer.start_log(
-                key="exit",
-                class_name=self.class_name,
-                method_name=method_name,
-                table_name=self.table_name,
+                "exit",
+                self.class_name,
+                method_name,
+                self.log_file,
             )
 
             return principal_x
 
         except Exception as e:
             self.log_writer.exception_log(
-                error=e,
-                class_name=self.class_name,
-                method_name=method_name,
-                table_name=self.table_name,
+                e,
+                self.class_name,
+                method_name,
+                self.log_file,
             )
 
     def scale_numerical_columns(self, data):
@@ -434,10 +434,10 @@ class Preprocessor:
         method_name = self.scale_numerical_columns.__name__
 
         self.log_writer.start_log(
-            key="start",
-            class_name=self.class_name,
-            method_name=method_name,
-            table_name=self.table_name,
+            "start",
+            self.class_name,
+            method_name,
+            self.log_file,
         )
 
         try:
@@ -446,14 +446,14 @@ class Preprocessor:
             self.scaler = StandardScaler()
 
             self.log_writer.log(
-                table_name=self.table_name,
+                self.log_file,
                 log_info=f"Initialized {self.scaler.__class__.__name__}",
             )
 
             self.scaled_data = self.scaler.fit_transform(self.data)
 
             self.log_writer.log(
-                table_name=self.table_name,
+                self.log_file,
                 log_info=f"Transformed data using {self.scaler.__class__.__name__}",
             )
 
@@ -462,25 +462,25 @@ class Preprocessor:
             )
 
             self.log_writer.log(
-                table_name=self.table_name,
+                self.log_file,
                 log_info="Converted transformed data to dataframe",
             )
 
             self.log_writer.start_log(
-                key="exit",
-                class_name=self.class_name,
-                method_name=method_name,
-                table_name=self.table_name,
+                "exit",
+                self.class_name,
+                method_name,
+                self.log_file,
             )
 
             return self.scaled_num_df
 
         except Exception as e:
             self.log_writer.exception_log(
-                error=e,
-                class_name=self.class_name,
-                method_name=method_name,
-                table_name=self.table_name,
+                e,
+                self.class_name,
+                method_name,
+                self.log_file,
             )
 
     def get_columns_with_zero_std_deviation(self, data):
@@ -497,10 +497,10 @@ class Preprocessor:
         method_name = self.get_columns_with_zero_std_deviation.__name__
 
         self.log_writer.start_log(
-            key="start",
-            class_name=self.class_name,
-            method_name=method_name,
-            table_name=self.table_name,
+            "start",
+            self.class_name,
+            method_name,
+            self.log_file,
         )
 
         try:
@@ -509,23 +509,23 @@ class Preprocessor:
             cols_to_drop = [x for x in data.columns if data_n[x]["std"] == 0]
 
             self.log_writer.log(
-                table_name=self.table_name,
+                self.log_file,
                 log_info="Got cols with zero standard deviation",
             )
 
             self.log_writer.start_log(
-                key="exit",
-                class_name=self.class_name,
-                method_name=method_name,
-                table_name=self.table_name,
+                "exit",
+                self.class_name,
+                method_name,
+                self.log_file,
             )
 
             return cols_to_drop
 
         except Exception as e:
             self.log_writer.exception_log(
-                error=e,
-                class_name=self.class_name,
-                method_name=method_name,
-                table_name=self.table_name,
+                e,
+                self.class_name,
+                method_name,
+                self.log_file,
             )

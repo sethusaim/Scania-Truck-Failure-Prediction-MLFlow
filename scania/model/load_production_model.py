@@ -34,9 +34,9 @@ class Load_Prod_Model:
 
         self.s3 = S3_Operation()
 
-        self.mlflow_op = MLFlow_Operation(table_name=self.load_prod_model_log)
+        self.mlflow_op = MLFlow_Operation(self.load_prod_model_log)
 
-    def create_folders_for_prod_and_stag(self, bucket, table_name):
+    def create_folders_for_prod_and_stag(self, bucket, log_file):
         """
         Method Name :   create_folders_for_prod_and_stag
         Description :   This method creates folders for production and staging bucket
@@ -51,34 +51,34 @@ class Load_Prod_Model:
         method_name = self.create_folders_for_prod_and_stag.__name__
 
         self.log_writer.start_log(
-            key="start",
-            class_name=self.class_name,
-            method_name=method_name,
-            table_name=table_name,
+            "start",
+            self.class_name,
+            method_name,
+            log_file,
         )
 
         try:
             self.s3.create_folder(
-                folder_name=self.prod_model_dir, bucket=bucket, table_name=table_name,
+                folder_name=self.prod_model_dir, bucket, log_file,
             )
 
             self.s3.create_folder(
-                folder_name=self.stag_model_dir, bucket=bucket, table_name=table_name,
+                folder_name=self.stag_model_dir, bucket, log_file,
             )
 
             self.log_writer.start_log(
-                key="exit",
-                class_name=self.class_name,
-                method_name=method_name,
-                table_name=table_name,
+                "exit",
+                self.class_name,
+                method_name,
+                log_file,
             )
 
         except Exception as e:
             self.log_writer.exception_log(
-                error=e,
-                class_name=self.class_name,
-                method_name=method_name,
-                table_name=table_name,
+                e,
+                self.class_name,
+                method_name,
+                log_file,
             )
 
     def load_production_model(self):
@@ -96,15 +96,15 @@ class Load_Prod_Model:
         method_name = self.load_production_model.__name__
 
         self.log_writer.start_log(
-            key="start",
-            class_name=self.class_name,
-            method_name=method_name,
-            table_name=self.load_prod_model_log,
+            "start",
+            self.class_name,
+            method_name,
+            self.load_prod_model_log,
         )
 
         try:
             self.create_folders_for_prod_and_stag(
-                bucket=self.model_bucket, table_name=self.load_prod_model_log
+                self.model_bucket, self.load_prod_model_log
             )
 
             self.mlflow_op.set_mlflow_tracking_uri()
@@ -132,21 +132,21 @@ class Load_Prod_Model:
             ]
 
             self.log_writer.log(
-                table_name=self.load_prod_model_log,
+                self.load_prod_model_log,
                 log_info="Created cols for all registered model",
             )
 
             runs_cols = runs[cols].max().sort_values(ascending=False)
 
             self.log_writer.log(
-                table_name=self.load_prod_model_log,
+                self.load_prod_model_log,
                 log_info="Sorted the runs cols in descending order",
             )
 
             metrics_dict = runs_cols.to_dict()
 
             self.log_writer.log(
-                table_name=self.load_prod_model_log,
+                self.load_prod_model_log,
                 log_info="Converted runs cols to dict",
             )
 
@@ -187,7 +187,7 @@ run_number  metrics.XGBoost0-best_score metrics.RandomForest1-best_score metrics
             ]
 
             self.log_writer.log(
-                table_name=self.load_prod_model_log,
+                self.load_prod_model_log,
                 log_info=f"Got top model names based on the metrics of clusters",
             )
 
@@ -201,7 +201,7 @@ run_number  metrics.XGBoost0-best_score metrics.RandomForest1-best_score metrics
             top_mn_lst = [mn.split(".")[1].split("-")[0] for mn in best_metrics_names]
 
             self.log_writer.log(
-                table_name=self.load_prod_model_log,
+                self.load_prod_model_log,
                 log_info=f"Got the top model names",
             )
 
@@ -219,8 +219,8 @@ run_number  metrics.XGBoost0-best_score metrics.RandomForest1-best_score metrics
                             model_version=mv.version,
                             stage="Production",
                             model_name=mv.name,
-                            from_bucket=self.model_bucket,
-                            to_bucket=self.model_bucket,
+                            self.model_bucket,
+                            self.model_bucket,
                         )
 
                     ## In the registered models, even kmeans model is present, so during Prediction,
@@ -231,8 +231,8 @@ run_number  metrics.XGBoost0-best_score metrics.RandomForest1-best_score metrics
                             model_version=mv.version,
                             stage="Production",
                             model_name=mv.name,
-                            from_bucket=self.model_bucket,
-                            to_bucket=self.model_bucket,
+                            self.model_bucket,
+                            self.model_bucket,
                         )
 
                     else:
@@ -240,26 +240,26 @@ run_number  metrics.XGBoost0-best_score metrics.RandomForest1-best_score metrics
                             model_version=mv.version,
                             stage="Staging",
                             model_name=mv.name,
-                            from_bucket=self.model_bucket,
-                            to_bucket=self.model_bucket,
+                            self.model_bucket,
+                            self.model_bucket,
                         )
 
             self.log_writer.log(
-                table_name=self.load_prod_model_log,
+                self.load_prod_model_log,
                 log_info="Transitioning of models based on scores successfully done",
             )
 
             self.log_writer.start_log(
-                key="exit",
-                class_name=self.class_name,
-                method_name=method_name,
-                table_name=self.load_prod_model_log,
+                "exit",
+                self.class_name,
+                method_name,
+                self.load_prod_model_log,
             )
 
         except Exception as e:
             self.log_writer.exception_log(
-                error=e,
-                class_name=self.class_name,
-                method_name=method_name,
-                table_name=self.load_prod_model_log,
+                e,
+                self.class_name,
+                method_name,
+                self.load_prod_model_log,
             )
