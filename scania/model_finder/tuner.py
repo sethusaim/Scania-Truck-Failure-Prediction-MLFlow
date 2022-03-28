@@ -42,10 +42,7 @@ class Model_Finder:
         method_name = self.get_best_model_for_adaboost.__name__
 
         self.log_writer.start_log(
-            "start",
-            self.class_name,
-            method_name,
-            self.log_file,
+            "start", self.class_name, method_name, self.log_file,
         )
 
         try:
@@ -54,11 +51,7 @@ class Model_Finder:
             )
 
             self.adaboost_best_params = self.model_utils.get_model_params(
-                self.ada_model,
-                model_key_name="adaboost_model",
-                x_train=train_x,
-                y_train=train_y,
-                self.log_file,
+                self.ada_model, "adaboost_model", train_x, train_y, self.log_file,
             )
 
             self.n_estimators = self.adaboost_best_params["n_estimators"]
@@ -91,20 +84,14 @@ class Model_Finder:
             )
 
             self.log_writer.start_log(
-                "exit",
-                self.class_name,
-                method_name,
-                self.log_file,
+                "exit", self.class_name, method_name, self.log_file,
             )
 
             return self.ada_model
 
         except Exception as e:
             self.log_writer.exception_log(
-                e,
-                self.class_name,
-                method_name,
-                self.log_file,
+                e, self.class_name, method_name, self.log_file,
             )
 
     def get_best_model_for_rf(self, train_x, train_y):
@@ -123,23 +110,14 @@ class Model_Finder:
         method_name = self.get_best_model_for_rf.__name__
 
         self.log_writer.start_log(
-            "start",
-            self.class_name,
-            method_name,
-            self.log_file,
+            "start", self.class_name, method_name, self.log_file,
         )
 
         try:
-            self.rf_model_name = self.model_utils.get_model_name(
-                self.rf_model, self.log_file
-            )
+            self.rf_model_name = self.rf_model.__class__.__name__
 
             self.rf_best_params = self.model_utils.get_model_params(
-                self.rf_model,
-                model_key_name="rf_model",
-                x_train=train_x,
-                y_train=train_y,
-                self.log_file,
+                self.rf_model, "rf_model", train_x, train_y, self.log_file,
             )
 
             self.criterion = self.rf_best_params["criterion"]
@@ -175,20 +153,14 @@ class Model_Finder:
             )
 
             self.log_writer.start_log(
-                "exit",
-                self.class_name,
-                method_name,
-                self.log_file,
+                "exit", self.class_name, method_name, self.log_file,
             )
 
             return self.rf_model
 
         except Exception as e:
             self.log_writer.exception_log(
-                e,
-                self.class_name,
-                method_name,
-                self.log_file,
+                e, self.class_name, method_name, self.log_file,
             )
 
     def get_trained_models(self, train_x, train_y, test_x, test_y):
@@ -205,10 +177,7 @@ class Model_Finder:
         method_name = self.get_trained_models.__name__
 
         self.log_writer.start_log(
-            "start",
-            self.class_name,
-            method_name,
-            self.log_file,
+            "start", self.class_name, method_name, self.log_file,
         )
 
         try:
@@ -216,27 +185,18 @@ class Model_Finder:
                 train_x=train_x, train_y=train_y
             )
 
-            ada_model_score = self.model_utilsget_model_score(
-                ada_model,
-                test_x=test_x,
-                test_y=test_y,
-                self.log_file,
+            ada_model_score = self.model_utils.get_model_score(
+                ada_model, test_x, test_y, self.log_file,
             )
 
             rf_model = self.get_best_model_for_rf(train_x=train_x, train_y=train_y)
 
             rf_model_score = self.model_utils.get_model_score(
-                rf_model,
-                test_x=test_x,
-                test_y=test_y,
-                self.log_file,
+                rf_model, test_x, test_y, self.log_file,
             )
 
             self.log_writer.start_log(
-                "exit",
-                self.class_name,
-                method_name,
-                self.log_file,
+                "exit", self.class_name, method_name, self.log_file,
             )
 
             return (
@@ -248,8 +208,5 @@ class Model_Finder:
 
         except Exception as e:
             self.log_writer.exception_log(
-                e,
-                self.class_name,
-                method_name,
-                self.log_file,
+                e, self.class_name, method_name, self.log_file,
             )
